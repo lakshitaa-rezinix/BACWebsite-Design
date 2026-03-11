@@ -14,9 +14,9 @@ export const blogPosts: BlogPost[] = [
     slug: "bis-award-recognition-2024",
     title: "BAC Receives BIS Award for Excellence in Hallmarking",
     excerpt:
-      "Bombay Assay Company was honored by the Bureau of Indian Standards for outstanding contribution to hallmarking standards and quality assurance in the Indian jewelry industry.",
+      "BOMBAY ASSAY COMPANY was honored by the Bureau of Indian Standards for outstanding contribution to hallmarking standards and quality assurance in the Indian jewelry industry.",
     content: `
-      <p>We are proud to announce that Bombay Assay Company has been recognized by the Bureau of Indian Standards (BIS) with an Award for Excellence in Hallmarking. This prestigious recognition underscores our unwavering commitment to maintaining the highest standards of quality in precious metal testing and hallmarking.</p>
+      <p>We are proud to announce that BOMBAY ASSAY COMPANY has been recognized by the Bureau of Indian Standards (BIS) with an Award for Excellence in Hallmarking. This prestigious recognition underscores our unwavering commitment to maintaining the highest standards of quality in precious metal testing and hallmarking.</p>
 
       <h3>A Testament to Quality</h3>
       <p>Since our founding in 2004, BAC has been at the forefront of the hallmarking revolution in India. This award recognizes our consistent efforts in ensuring that every piece of jewelry that passes through our centers meets the stringent BIS standards.</p>
@@ -37,7 +37,7 @@ export const blogPosts: BlogPost[] = [
     excerpt:
       "BAC conducted a comprehensive training program for all HODs to enhance quality control processes and implement the latest testing methodologies across all centers.",
     content: `
-      <p>Bombay Assay Company recently concluded an intensive training program designed for Head of Departments across all our operational centers. The program focused on advanced quality control methodologies, new BIS compliance requirements, and the latest developments in precious metal testing technology.</p>
+      <p>BOMBAY ASSAY COMPANY recently concluded an intensive training program designed for Head of Departments across all our operational centers. The program focused on advanced quality control methodologies, new BIS compliance requirements, and the latest developments in precious metal testing technology.</p>
 
       <h3>Program Highlights</h3>
       <p>The training covered XRF analysis techniques, fire assay best practices, and the implementation of digital workflows for certificate generation. HODs from all 7 centers participated, fostering cross-center collaboration and knowledge sharing.</p>
@@ -56,7 +56,7 @@ export const blogPosts: BlogPost[] = [
     excerpt:
       "A look back at the journey of BAC's exclusive partnership with Titan Company Limited, India's premier jewelry brand, and the milestones we've achieved together.",
     content: `
-      <p>The partnership between Bombay Assay Company and Titan Company Limited stands as a testament to shared values of quality, integrity, and excellence. As Titan's exclusive hallmarking partner, BAC has played a pivotal role in ensuring that every piece of Titan jewelry meets the highest quality standards.</p>
+      <p>The partnership between BOMBAY ASSAY COMPANY and Titan Company Limited stands as a testament to shared values of quality, integrity, and excellence. As Titan's exclusive hallmarking partner, BAC has played a pivotal role in ensuring that every piece of Titan jewelry meets the highest quality standards.</p>
 
       <h3>A Shared Vision</h3>
       <p>Both BAC and Titan share a commitment to transparency and consumer trust. Together, we've processed millions of jewelry pieces, each bearing the mark of certified quality that consumers trust and rely upon.</p>
@@ -75,7 +75,7 @@ export const blogPosts: BlogPost[] = [
     excerpt:
       "With the addition of our Surat center, BAC now operates 7 hallmarking and assaying centers, strengthening our pan-India presence in jewelry quality assurance.",
     content: `
-      <p>Bombay Assay Company is proud to announce the expansion of our operations to 7 centers across India. With our newest center in Surat — India's diamond capital — we are now strategically positioned to serve the country's major jewelry manufacturing and trading hubs.</p>
+      <p>BOMBAY ASSAY COMPANY is proud to announce the expansion of our operations to 7 centers across India. With our newest center in Surat — India's diamond capital — we are now strategically positioned to serve the country's major jewelry manufacturing and trading hubs.</p>
 
       <h3>Our Centers</h3>
       <p>BAC operates from Bangalore (Head Office), Mumbai, Delhi, Kolkata, Surat, Hosur, and Udupi. Each center is fully equipped with state-of-the-art testing equipment and staffed by highly trained professionals.</p>

@@ -43,7 +43,7 @@ export function Blog() {
               Blog & News
             </h1>
             <p className="text-muted-foreground text-xl">
-              Stay updated with the latest from Bombay Assay Company
+              Stay updated with the latest from BOMBAY ASSAY COMPANY
             </p>
           </motion.div>
         </div>

@@ -1,12 +1,12 @@
 export const COMPANY = {
-  name: "Bombay Assay Company",
+  name: "BOMBAY ASSAY COMPANY",
   shortName: "BAC",
   tagline: "BIS-Recognized Hallmarking Center",
   hq: "Bangalore",
   whatsapp: "919999999999",
   email: "admin@bombayassay.com",
   phone: "+91-9606803916",
-  about: `Bombay Assay Company (BAC), a jewelry Quality Assurance firm creating new milestones in the field of assaying (testing) and hallmarking of precious metal items (gold, silver, platinum and palladium) in India. Being accredited to Bureau of Indian Standards (BIS), BAC aimed to bring a revolution in the Indian gold hallmarking industry. The process and facility of BAC matches and exceeds all the renowned global standards for the precious metal assessment.`,
+  about: `BOMBAY ASSAY COMPANY (BAC), a jewelry Quality Assurance firm creating new milestones in the field of assaying (testing) and hallmarking of precious metal items (gold, silver, platinum and palladium) in India. Being accredited to Bureau of Indian Standards (BIS), BAC aimed to bring a revolution in the Indian gold hallmarking industry. The process and facility of BAC matches and exceeds all the renowned global standards for the precious metal assessment.`,
   aboutExtended: `Having its HO at Bangalore and its branches at Indian economical capital Mumbai, another metro city Kolkata and Southern industrial hub Hosur, Western coast jewelry hub Udupi, the capital city Delhi and Diamond capital Surat, it can cover the vast Indian market. Machineries used in the assay centers, the highly skilled resources to handle the process and the guidance & backing of top notch think tanks of the industry, keeps the BAC an edge above the others.`,
   purpose:
     "To be a leader in the Indian Precious metal hallmarking & Quality Assurance through exclusive corporate Clientship",
@@ -140,7 +140,7 @@ export const MILESTONES = [
     year: "2004",
     title: "Company Founded",
     description:
-      "Bombay Assay Company established in Bangalore with a vision to revolutionize India's hallmarking industry.",
+      "BOMBAY ASSAY COMPANY established in Bangalore with a vision to revolutionize India's hallmarking industry.",
   },
   {
     year: "2008",

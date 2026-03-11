@@ -57,7 +57,7 @@ export function Root() {
               />
               <div>
                 <div className="text-foreground font-semibold text-lg tracking-tight group-hover:text-primary transition-colors">
-                  Bombay Assay Company
+                  BOMBAY ASSAY COMPANY
                 </div>
                 <div className="text-primary/60 text-xs tracking-wider">
                   BIS-RECOGNIZED HALLMARKING CENTER
@@ -159,7 +159,7 @@ export function Root() {
                   className="w-8 h-8 object-contain brightness-0 dark:invert"
                 />
                 <span className="text-foreground font-semibold text-lg">
-                  Bombay Assay Company
+                  BOMBAY ASSAY COMPANY
                 </span>
               </Link>
               <p className="text-muted-foreground text-sm leading-relaxed mb-4">
@@ -296,7 +296,7 @@ export function Root() {
             className="border-t border-primary/20 mt-8 pt-8 text-center"
           >
             <p className="text-muted-foreground text-sm">
-              &copy; 2026 Bombay Assay Company. All rights reserved.
+              &copy; 2026 BOMBAY ASSAY COMPANY. All rights reserved.
             </p>
           </motion.div>
         </div>

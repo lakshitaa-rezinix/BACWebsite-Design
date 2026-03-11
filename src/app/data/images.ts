@@ -159,9 +159,9 @@ export const RECOGNITION_IMAGES: GalleryImage[] = [
   },
   {
     src: "/images/awards/bis-award-3.jpeg",
-    alt: "Bombay Assay Company receiving Certificate of Achievement on stage with dignitaries",
+    alt: "BOMBAY ASSAY COMPANY receiving Certificate of Achievement on stage with dignitaries",
     title: "BIS Certificate of Achievement",
-    caption: "Formal Certificate of Achievement presented to Bombay Assay Company for outstanding performance in hallmarking operations.",
+    caption: "Formal Certificate of Achievement presented to BOMBAY ASSAY COMPANY for outstanding performance in hallmarking operations.",
     category: "Recognition",
   },
   {
@@ -202,7 +202,7 @@ export const ALL_GALLERY_IMAGES: GalleryImage[] = [
 export const AWARD_IMAGES = [
   { src: "/images/awards/bis-award.jpeg", alt: "BAC recognized at Titan ONE awards ceremony" },
   { src: "/images/awards/bis-award-2.jpeg", alt: "BIS Hallmark Carnival Award" },
-  { src: "/images/awards/bis-award-3.jpeg", alt: "BIS Certificate of Achievement — Bombay Assay Company" },
+  { src: "/images/awards/bis-award-3.jpeg", alt: "BIS Certificate of Achievement — BOMBAY ASSAY COMPANY" },
   { src: "/images/awards/training.jpeg", alt: "Internal team training session" },
   { src: "/images/awards/training-hods.jpeg", alt: "HODs strategy session with Titan management" },
   { src: "/images/awards/with-titan-team.jpeg", alt: "BAC team at Titan DEI Week" },

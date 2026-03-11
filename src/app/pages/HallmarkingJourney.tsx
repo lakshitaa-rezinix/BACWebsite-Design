@@ -284,7 +284,7 @@ export function HallmarkingJourney() {
             </h2>
 
             <p className="text-foreground/70 text-xl max-w-2xl mx-auto mb-10 leading-relaxed">
-              Every piece of jewelry that passes through Bombay Assay Company carries a guarantee —
+              Every piece of jewelry that passes through BOMBAY ASSAY COMPANY carries a guarantee —
               a guarantee of purity, precision, and trust. From receiving to hallmarking,
               our process ensures that the mark on your jewelry means exactly what it says.
             </p>
