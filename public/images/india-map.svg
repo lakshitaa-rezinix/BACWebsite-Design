@@ -1,0 +1,32 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 600 700" fill="none">
+  <!-- India Map - Detailed outline with state boundaries -->
+  <defs>
+    <linearGradient id="mapGrad" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#C6A75E" stop-opacity="0.15"/>
+      <stop offset="100%" stop-color="#C6A75E" stop-opacity="0.05"/>
+    </linearGradient>
+    <filter id="glow">
+      <feGaussianBlur stdDeviation="2" result="blur"/>
+      <feMerge>
+        <feMergeNode in="blur"/>
+        <feMergeNode in="SourceGraphic"/>
+      </feMerge>
+    </filter>
+  </defs>
+
+  <!-- India outline - accurate simplified -->
+  <path d="M 270 45 L 285 42 L 305 48 L 320 42 L 340 50 L 355 45 L 370 52 L 385 48 L 395 55 L 405 50 L 418 58 L 425 65 L 435 60 L 445 68 L 455 72 L 460 80 L 465 90 L 470 85 L 478 92 L 485 100 L 490 110 L 495 105 L 502 115 L 505 125 L 510 135 L 505 145 L 500 155 L 505 165 L 510 175 L 505 185 L 498 195 L 492 200 L 488 210 L 482 220 L 478 225 L 485 235 L 490 245 L 495 255 L 488 260 L 480 265 L 475 275 L 468 280 L 462 288 L 455 295 L 450 305 L 445 315 L 440 325 L 435 335 L 430 340 L 425 350 L 420 360 L 418 370 L 420 380 L 425 390 L 430 400 L 428 410 L 422 418 L 415 425 L 408 432 L 400 438 L 395 445 L 388 452 L 380 458 L 372 465 L 365 472 L 358 478 L 350 485 L 342 492 L 335 498 L 328 505 L 320 512 L 312 518 L 305 525 L 298 532 L 290 540 L 282 548 L 275 555 L 268 562 L 260 570 L 252 575 L 245 580 L 240 588 L 238 598 L 240 608 L 245 618 L 250 625 L 252 632 L 248 638 L 242 642 L 235 638 L 228 632 L 222 625 L 215 618 L 210 610 L 205 602 L 200 595 L 195 585 L 188 575 L 182 565 L 175 555 L 170 548 L 165 540 L 158 530 L 152 520 L 148 510 L 145 500 L 140 490 L 135 480 L 130 470 L 128 460 L 125 450 L 120 440 L 115 430 L 112 420 L 110 410 L 108 400 L 105 390 L 102 380 L 100 370 L 98 360 L 95 350 L 92 340 L 90 330 L 88 320 L 85 310 L 82 300 L 80 290 L 78 280 L 80 270 L 85 260 L 90 250 L 88 240 L 82 230 L 78 220 L 80 210 L 85 200 L 90 190 L 95 180 L 100 172 L 108 165 L 115 158 L 120 150 L 128 142 L 135 135 L 140 128 L 148 120 L 155 112 L 160 105 L 168 98 L 175 92 L 182 85 L 190 80 L 198 75 L 205 70 L 210 65 L 218 60 L 225 55 L 232 52 L 240 48 L 248 45 L 255 42 L 262 44 Z"
+    stroke="#C6A75E" stroke-width="1.5" stroke-opacity="0.4" fill="url(#mapGrad)" />
+
+  <!-- Kashmir region -->
+  <path d="M 190 80 L 195 68 L 205 58 L 218 50 L 230 45 L 240 40 L 252 38 L 262 35 L 270 38 L 270 45"
+    stroke="#C6A75E" stroke-width="1" stroke-opacity="0.25" fill="none" stroke-dasharray="4,4" />
+
+  <!-- State boundary hints -->
+  <path d="M 155 112 L 200 130 L 250 140 L 300 135 L 350 145 L 400 160" stroke="#C6A75E" stroke-width="0.5" stroke-opacity="0.15" fill="none"/>
+  <path d="M 100 250 L 150 260 L 200 255 L 250 270 L 300 280 L 350 290" stroke="#C6A75E" stroke-width="0.5" stroke-opacity="0.15" fill="none"/>
+  <path d="M 130 380 L 180 370 L 230 380 L 280 400 L 330 420" stroke="#C6A75E" stroke-width="0.5" stroke-opacity="0.15" fill="none"/>
+
+  <!-- Sri Lanka hint -->
+  <ellipse cx="290" cy="635" rx="20" ry="25" stroke="#C6A75E" stroke-width="0.8" stroke-opacity="0.2" fill="none"/>
+</svg>

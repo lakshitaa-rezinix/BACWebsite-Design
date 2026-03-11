@@ -1,0 +1,13 @@
+/* Premium Fonts for BAC */
+
+/* Inter for body text - clean geometric sans-serif */
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+
+/* Playfair Display for headings - elegant serif */
+@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;800;900&display=swap');
+
+/* Cormorant Garamond for editorial luxury headings */
+@import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;0,700;1,400;1,600;1,700&display=swap');
+
+/* JetBrains Mono for monospaced numbers */
+@import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@500;600;700&display=swap');
