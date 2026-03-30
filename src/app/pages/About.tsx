@@ -1,7 +1,7 @@
 import { motion } from "motion/react";
-import { Award, Target, Eye, Users, Building2, TrendingUp, Compass } from "lucide-react";
+import { Award, Target, Eye, Users, Building2, TrendingUp, Compass, FileText, Download } from "lucide-react";
 import { COMPANY, MILESTONES } from "../data/constants";
-import { AWARD_IMAGES, TEAM_IMAGES } from "../data/images";
+import { AWARD_IMAGES } from "../data/images";
 import { SplitTextReveal, GoldShimmerText } from "../components/animations/AnimatedText";
 
 
@@ -33,14 +33,12 @@ export function About() {
     },
   ];
 
-  const teamLocations = [
-    { city: "Bangalore (HODs)", image: TEAM_IMAGES.bangalore },
-    { city: "Mumbai", image: TEAM_IMAGES.mumbai },
-    { city: "Delhi", image: TEAM_IMAGES.delhi },
-    { city: "Kolkata", image: TEAM_IMAGES.kolkata },
-    { city: "Surat", image: TEAM_IMAGES.surat },
-    { city: "Hosur", image: TEAM_IMAGES.hosur },
-    { city: "Udupi", image: TEAM_IMAGES.udupi },
+  const bisCertificates = [
+    { name: "Anupam Das", file: "/certificates/Anupam Das (1).pdf" },
+    { name: "Ayan Dutta", file: "/certificates/Ayan Dutta (1).pdf" },
+    { name: "Ayan Dutta (Advanced)", file: "/certificates/Ayan Dutta.pdf" },
+    { name: "Ishwar Jha", file: "/certificates/Ishwar Jha.pdf" },
+    { name: "Raju Das", file: "/certificates/Raju Das.pdf" },
   ];
 
   return (
@@ -111,7 +109,7 @@ export function About() {
             >
               <div className="grid grid-cols-2 gap-6">
                 {[
-                  { icon: Building2, label: "7 Centers", desc: "Across India" },
+                  { icon: Building2, label: "9 Centers", desc: "Across India" },
                   {
                     icon: Users,
                     label: "100+ Experts",
@@ -124,7 +122,7 @@ export function About() {
                   },
                   {
                     icon: TrendingUp,
-                    label: "20+ Years",
+                    label: "5+ Years",
                     desc: "Industry Experience",
                   },
                 ].map((stat, index) => (
@@ -251,7 +249,7 @@ export function About() {
         </div>
       </section>
 
-      {/* Our Team */}
+      {/* BIS Certified Staff */}
       <section className="py-20 bg-gradient-to-b from-transparent to-card/30">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <motion.div
@@ -261,17 +259,17 @@ export function About() {
             className="text-center mb-12"
           >
             <h2 className="text-4xl font-bold text-foreground mb-4">
-              Our Team
+              BIS Certified Staff
             </h2>
             <p className="text-muted-foreground text-lg">
-              Dedicated professionals across 7 centers
+              Our certified professionals across 9 centers
             </p>
           </motion.div>
 
           <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {teamLocations.map((team, index) => (
+            {bisCertificates.map((cert, index) => (
               <motion.div
-                key={team.city}
+                key={cert.name}
                 initial={{ opacity: 0, y: 20 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
@@ -279,18 +277,25 @@ export function About() {
                 whileHover={{ y: -5 }}
                 className="group overflow-hidden rounded-xl border border-primary/20 hover:border-primary/50 transition-all"
               >
-                <div className="aspect-video overflow-hidden">
-                  <img
-                    src={team.image}
-                    alt={`Team ${team.city}`}
-                    className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
-                    loading="lazy"
-                  />
-                </div>
-                <div className="p-4 bg-card/50">
+                <div className="aspect-video bg-card/50 flex flex-col items-center justify-center gap-3">
+                  <div className="p-4 bg-primary/10 rounded-xl group-hover:bg-primary/20 transition-colors">
+                    <FileText className="text-primary" size={40} />
+                  </div>
                   <h3 className="text-lg font-semibold text-foreground">
-                    Team {team.city}
+                    {cert.name}
                   </h3>
+                  <span className="text-xs text-primary/60 uppercase tracking-wider">BIS Certificate</span>
+                </div>
+                <div className="p-4 bg-card/50 flex items-center justify-center">
+                  <a
+                    href={cert.file}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="flex items-center gap-2 text-sm text-primary hover:text-primary/80 transition-colors font-medium"
+                  >
+                    <Download size={16} />
+                    View Certificate
+                  </a>
                 </div>
               </motion.div>
             ))}
@@ -350,7 +355,7 @@ export function About() {
               Our Journey
             </h2>
             <p className="text-muted-foreground text-lg">
-              Two decades of excellence and growth
+              Our journey of excellence and growth
             </p>
           </motion.div>
 

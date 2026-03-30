@@ -1,19 +1,16 @@
 import { motion } from "motion/react";
-import { Award, Building2, Package, MapPin, Shield } from "lucide-react";
+import { Building2, Briefcase } from "lucide-react";
 
 export function CredibilityStrip() {
   const credentials = [
-    { icon: Award, text: "BIS Recognition", subtext: "Certified Authority" },
     { icon: Building2, text: "Titan Partnership", subtext: "Exclusive Partner" },
-    { icon: Package, text: "10M+ Pieces", subtext: "Annually" },
-    { icon: MapPin, text: "7 Centers", subtext: "Across India" },
-    { icon: Shield, text: "20+ Years", subtext: "Of Trust" },
+    { icon: Briefcase, text: "Corporate Jewelery Exclusiveship", subtext: "Industry Leader" },
   ];
 
   return (
     <section className="py-12 border-y border-primary/20 bg-card/50 overflow-hidden">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="grid grid-cols-2 md:grid-cols-5 gap-8">
+        <div className="grid grid-cols-2 gap-8 max-w-2xl mx-auto">
           {credentials.map((item, index) => (
             <motion.div
               key={index}

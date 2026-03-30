@@ -44,7 +44,7 @@ export function ClientShowcase() {
               animate={isPaused ? {} : { x: ["0%", "-50%"] }}
               transition={{
                 x: {
-                  duration: 30,
+                  duration: 15,
                   repeat: Infinity,
                   ease: "linear",
                 },
@@ -55,12 +55,14 @@ export function ClientShowcase() {
                   key={`${client.name}-${index}`}
                   className="group flex-shrink-0"
                 >
-                  <div className="bg-card/50 backdrop-blur-sm border border-primary/20 rounded-xl px-10 py-8 flex flex-col items-center gap-3 min-w-[220px] transition-all duration-300 group-hover:border-primary/50 group-hover:shadow-[0_0_20px_rgba(198,167,94,0.15)]">
-                    <img
-                      src={client.logo}
-                      alt={client.name}
-                      className="h-14 w-auto object-contain dark:invert transition-all duration-300 grayscale group-hover:grayscale-0"
-                    />
+                  <div className="bg-card/50 backdrop-blur-sm border border-primary/20 rounded-xl w-[220px] h-[140px] flex flex-col items-center justify-center gap-3 transition-all duration-300 group-hover:border-primary/50 group-hover:shadow-[0_0_20px_rgba(198,167,94,0.15)]">
+                    <div className="h-14 w-36 flex items-center justify-center">
+                      <img
+                        src={client.logo}
+                        alt={client.name}
+                        className="max-h-14 max-w-full object-contain dark:invert transition-all duration-300 grayscale group-hover:grayscale-0"
+                      />
+                    </div>
                     <p className="text-muted-foreground text-sm">{client.description}</p>
                   </div>
                 </div>
