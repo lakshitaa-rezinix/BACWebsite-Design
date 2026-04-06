@@ -1,20 +1,30 @@
 import { motion } from "motion/react";
 import { useState } from "react";
 import { useNavigate } from "react-router";
-import { Lock, Mail } from "lucide-react";
+import { Lock, Mail, Loader2 } from "lucide-react";
 import { Button } from "../../components/ui/button";
 import { Input } from "../../components/ui/input";
+import { api, setToken } from "../../lib/api";
+import { toast } from "sonner";
 
 export function AdminLogin() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
 
-  const handleLogin = (e: React.FormEvent) => {
+  const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
-    // Mock auth — accepts any credentials
-    localStorage.setItem("bac-admin-auth", "true");
-    navigate("/admin/dashboard");
+    setLoading(true);
+    try {
+      const result = await api.login(email, password);
+      setToken(result.token);
+      navigate("/admin/dashboard");
+    } catch (err: any) {
+      toast.error(err.message || "Invalid credentials");
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
@@ -78,14 +88,21 @@ export function AdminLogin() {
               </div>
             </div>
 
-            <Button className="w-full bg-primary hover:bg-primary/80 text-primary-foreground font-semibold py-5">
-              Sign In
+            <Button
+              type="submit"
+              disabled={loading}
+              className="w-full bg-primary hover:bg-primary/80 text-primary-foreground font-semibold py-5"
+            >
+              {loading ? (
+                <span className="flex items-center gap-2">
+                  <Loader2 className="animate-spin" size={16} />
+                  Signing in...
+                </span>
+              ) : (
+                "Sign In"
+              )}
             </Button>
           </form>
-
-          <p className="text-muted-foreground text-xs text-center mt-6">
-            Demo: Use any email/password to login
-          </p>
         </div>
       </motion.div>
     </div>

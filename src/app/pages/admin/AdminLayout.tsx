@@ -1,4 +1,4 @@
-import { Outlet, Link, useLocation, useNavigate } from "react-router";
+import { Outlet, Link, useLocation, useNavigate, Navigate } from "react-router";
 import {
   LayoutDashboard,
   FileText,
@@ -7,6 +7,7 @@ import {
   Award,
   LogOut,
 } from "lucide-react";
+import { isAuthenticated, clearToken } from "../../lib/api";
 
 const navItems = [
   { path: "/admin/dashboard", label: "Dashboard", icon: LayoutDashboard },
@@ -24,8 +25,12 @@ export function AdminLayout() {
   const location = useLocation();
   const navigate = useNavigate();
 
+  if (!isAuthenticated()) {
+    return <Navigate to="/admin" replace />;
+  }
+
   const handleLogout = () => {
-    localStorage.removeItem("bac-admin-auth");
+    clearToken();
     navigate("/admin");
   };
 
