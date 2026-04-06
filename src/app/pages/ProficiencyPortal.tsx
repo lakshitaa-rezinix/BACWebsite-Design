@@ -1,34 +1,92 @@
 import { motion } from "motion/react";
-import { 
-  FileText, 
-  Download, 
-  Mail, 
-  Calendar, 
-  CheckCircle, 
+import {
+  FileText,
+  Award,
+  Search,
+  CheckCircle,
   Clock,
-  TrendingUp,
-  Users,
-  Award
+  XCircle,
+  Loader2,
 } from "lucide-react";
 import { Button } from "../components/ui/button";
 import { Input } from "../components/ui/input";
 import { useState } from "react";
+import { api } from "../lib/api";
+import { toast } from "sonner";
+
+interface Certificate {
+  _id: string;
+  certificateId: string;
+  registrationId: string;
+  testType: string;
+  organizationName: string;
+  issueDate: string;
+  validUntil: string;
+  status: string;
+}
 
 export function ProficiencyPortal() {
-  const [activeTab, setActiveTab] = useState<"dashboard" | "register" | "certificates">("dashboard");
+  const [activeTab, setActiveTab] = useState<"register" | "certificates">("register");
 
-  const stats = [
-    { icon: FileText, label: "Total Registrations", value: "142", trend: "+12%" },
-    { icon: Award, label: "Certificates Issued", value: "89", trend: "+8%" },
-    { icon: Users, label: "Active Participants", value: "53", trend: "+15%" },
-  ];
+  // Registration form state
+  const [regForm, setRegForm] = useState({
+    organizationName: "",
+    contactPerson: "",
+    email: "",
+    testType: "Gold Purity Test",
+    preferredDate: "",
+    notes: "",
+  });
+  const [submittingReg, setSubmittingReg] = useState(false);
+  const [assignedRegId, setAssignedRegId] = useState<string | null>(null);
 
-  const recentRegistrations = [
-    { id: "REG-2024-045", name: "Gold Purity Test", date: "2024-03-01", status: "Completed" },
-    { id: "REG-2024-044", name: "Silver Hallmark", date: "2024-02-28", status: "In Progress" },
-    { id: "REG-2024-043", name: "Platinum Analysis", date: "2024-02-27", status: "Completed" },
-    { id: "REG-2024-042", name: "Diamond Grading", date: "2024-02-26", status: "Pending" },
-  ];
+  // Certificate lookup state
+  const [lookupId, setLookupId] = useState("");
+  const [certificates, setCertificates] = useState<Certificate[]>([]);
+  const [lookingUp, setLookingUp] = useState(false);
+  const [hasSearched, setHasSearched] = useState(false);
+
+  const handleRegistrationSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setSubmittingReg(true);
+    setAssignedRegId(null);
+    try {
+      const result = await api.submitRegistration(regForm);
+      setAssignedRegId(result.registrationId);
+      toast.success("Registration submitted successfully!");
+      setRegForm({
+        organizationName: "",
+        contactPerson: "",
+        email: "",
+        testType: "Gold Purity Test",
+        preferredDate: "",
+        notes: "",
+      });
+    } catch (err: any) {
+      toast.error(err.message || "Failed to submit registration");
+    } finally {
+      setSubmittingReg(false);
+    }
+  };
+
+  const handleCertificateLookup = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!lookupId.trim()) return;
+    setLookingUp(true);
+    setHasSearched(true);
+    try {
+      const results = await api.lookupCertificates(lookupId.trim());
+      setCertificates(results);
+      if (results.length === 0) {
+        toast.info("No certificates found for this registration ID");
+      }
+    } catch (err: any) {
+      toast.error(err.message || "Failed to look up certificates");
+      setCertificates([]);
+    } finally {
+      setLookingUp(false);
+    }
+  };
 
   return (
     <div className="min-h-screen">
@@ -70,13 +128,12 @@ export function ProficiencyPortal() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex gap-4">
             {[
-              { id: "dashboard", label: "Dashboard", icon: TrendingUp },
-              { id: "register", label: "New Registration", icon: FileText },
-              { id: "certificates", label: "My Certificates", icon: Award },
+              { id: "register" as const, label: "New Registration", icon: FileText },
+              { id: "certificates" as const, label: "My Certificates", icon: Award },
             ].map((tab) => (
               <button
                 key={tab.id}
-                onClick={() => setActiveTab(tab.id as any)}
+                onClick={() => setActiveTab(tab.id)}
                 className={`flex items-center gap-2 px-6 py-3 rounded-lg font-semibold transition-all ${
                   activeTab === tab.id
                     ? "bg-primary text-primary-foreground"
@@ -94,91 +151,6 @@ export function ProficiencyPortal() {
       {/* Content */}
       <section className="py-12">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          {activeTab === "dashboard" && (
-            <motion.div
-              key="dashboard"
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-            >
-              {/* Stats Grid */}
-              <div className="grid md:grid-cols-3 gap-6 mb-8">
-                {stats.map((stat, index) => (
-                  <motion.div
-                    key={index}
-                    initial={{ opacity: 0, y: 20 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{ delay: index * 0.1 }}
-                    className="p-6 bg-card/50 backdrop-blur-sm border border-primary/20 rounded-xl"
-                  >
-                    <div className="flex items-start justify-between mb-4">
-                      <div className="p-3 bg-primary/10 rounded-lg">
-                        <stat.icon className="text-primary" size={24} />
-                      </div>
-                      <span className="text-green-400 text-sm font-semibold">
-                        {stat.trend}
-                      </span>
-                    </div>
-                    <div className="text-4xl font-bold text-foreground font-mono mb-2">
-                      {stat.value}
-                    </div>
-                    <div className="text-muted-foreground text-sm">
-                      {stat.label}
-                    </div>
-                  </motion.div>
-                ))}
-              </div>
-
-              {/* Recent Registrations */}
-              <div className="bg-card/50 backdrop-blur-sm border border-primary/20 rounded-xl p-6">
-                <h2 className="text-2xl font-bold text-foreground mb-6">
-                  Recent Registrations
-                </h2>
-                <div className="space-y-4">
-                  {recentRegistrations.map((reg, index) => (
-                    <motion.div
-                      key={reg.id}
-                      initial={{ opacity: 0, x: -20 }}
-                      animate={{ opacity: 1, x: 0 }}
-                      transition={{ delay: index * 0.1 }}
-                      className="flex items-center justify-between p-4 bg-background/50 border border-primary/10 rounded-lg hover:border-primary/30 transition-all"
-                    >
-                      <div className="flex items-center gap-4">
-                        <div className="w-12 h-12 bg-primary/10 rounded-lg flex items-center justify-center">
-                          <FileText className="text-primary" size={20} />
-                        </div>
-                        <div>
-                          <div className="text-foreground font-semibold">
-                            {reg.name}
-                          </div>
-                          <div className="text-muted-foreground text-sm">
-                            {reg.id} • {reg.date}
-                          </div>
-                        </div>
-                      </div>
-                      <div className="flex items-center gap-3">
-                        <span className={`px-3 py-1 rounded-full text-xs font-semibold ${
-                          reg.status === "Completed"
-                            ? "bg-green-500/20 text-green-400"
-                            : reg.status === "In Progress"
-                            ? "bg-blue-500/20 text-blue-400"
-                            : "bg-yellow-500/20 text-yellow-400"
-                        }`}>
-                          {reg.status}
-                        </span>
-                        {reg.status === "Completed" && (
-                          <Button size="sm" variant="outline" className="border-primary/30 text-primary hover:bg-primary/10">
-                            <Download size={16} className="mr-2" />
-                            Download
-                          </Button>
-                        )}
-                      </div>
-                    </motion.div>
-                  ))}
-                </div>
-              </div>
-            </motion.div>
-          )}
-
           {activeTab === "register" && (
             <motion.div
               key="register"
@@ -186,49 +158,81 @@ export function ProficiencyPortal() {
               animate={{ opacity: 1, y: 0 }}
               className="max-w-2xl mx-auto"
             >
+              {/* Success message with registration ID */}
+              {assignedRegId && (
+                <motion.div
+                  initial={{ opacity: 0, y: -10 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  className="mb-6 p-6 bg-green-500/10 border border-green-500/30 rounded-xl text-center"
+                >
+                  <CheckCircle className="text-green-400 mx-auto mb-3" size={32} />
+                  <h3 className="text-xl font-bold text-foreground mb-2">Registration Submitted!</h3>
+                  <p className="text-muted-foreground mb-3">Your registration ID is:</p>
+                  <div className="text-3xl font-mono font-bold text-primary bg-primary/10 rounded-lg py-3 px-6 inline-block">
+                    {assignedRegId}
+                  </div>
+                  <p className="text-muted-foreground text-sm mt-3">
+                    Save this ID to look up your certificates later.
+                  </p>
+                </motion.div>
+              )}
+
               <div className="bg-card/50 backdrop-blur-sm border border-primary/20 rounded-xl p-8">
                 <h2 className="text-3xl font-bold text-foreground mb-6">
                   New Registration
                 </h2>
-                <form className="space-y-6">
+                <form onSubmit={handleRegistrationSubmit} className="space-y-6">
                   <div>
                     <label className="block text-foreground mb-2">
-                      Organization Name
+                      Organization Name *
                     </label>
                     <Input
+                      required
                       type="text"
                       placeholder="Enter organization name"
+                      value={regForm.organizationName}
+                      onChange={(e) => setRegForm({ ...regForm, organizationName: e.target.value })}
                       className="bg-background/50 border-primary/20 text-foreground"
                     />
                   </div>
 
                   <div>
                     <label className="block text-foreground mb-2">
-                      Contact Person
+                      Contact Person *
                     </label>
                     <Input
+                      required
                       type="text"
                       placeholder="Enter contact person name"
+                      value={regForm.contactPerson}
+                      onChange={(e) => setRegForm({ ...regForm, contactPerson: e.target.value })}
                       className="bg-background/50 border-primary/20 text-foreground"
                     />
                   </div>
 
                   <div>
                     <label className="block text-foreground mb-2">
-                      Email Address
+                      Email Address *
                     </label>
                     <Input
+                      required
                       type="email"
                       placeholder="Enter email address"
+                      value={regForm.email}
+                      onChange={(e) => setRegForm({ ...regForm, email: e.target.value })}
                       className="bg-background/50 border-primary/20 text-foreground"
                     />
                   </div>
 
                   <div>
                     <label className="block text-foreground mb-2">
-                      Test Type
+                      Test Type *
                     </label>
-                    <select className="w-full px-4 py-2 bg-background/50 border border-primary/20 text-foreground rounded-lg outline-none focus:border-primary transition-colors">
+                    <select
+                      value={regForm.testType}
+                      onChange={(e) => setRegForm({ ...regForm, testType: e.target.value })}
+                      className="w-full px-4 py-2 bg-background/50 border border-primary/20 text-foreground rounded-lg outline-none focus:border-primary transition-colors"
+                    >
                       <option>Gold Purity Test</option>
                       <option>Silver Hallmark</option>
                       <option>Platinum Analysis</option>
@@ -242,6 +246,8 @@ export function ProficiencyPortal() {
                     </label>
                     <Input
                       type="date"
+                      value={regForm.preferredDate}
+                      onChange={(e) => setRegForm({ ...regForm, preferredDate: e.target.value })}
                       className="bg-background/50 border-primary/20 text-foreground"
                     />
                   </div>
@@ -253,12 +259,25 @@ export function ProficiencyPortal() {
                     <textarea
                       rows={4}
                       placeholder="Any special requirements or notes..."
+                      value={regForm.notes}
+                      onChange={(e) => setRegForm({ ...regForm, notes: e.target.value })}
                       className="w-full px-4 py-2 bg-background/50 border border-primary/20 text-foreground rounded-lg outline-none focus:border-primary transition-colors resize-none"
                     />
                   </div>
 
-                  <Button className="w-full bg-primary hover:bg-primary/80 text-primary-foreground font-semibold py-6">
-                    Submit Registration
+                  <Button
+                    type="submit"
+                    disabled={submittingReg}
+                    className="w-full bg-primary hover:bg-primary/80 text-primary-foreground font-semibold py-6"
+                  >
+                    {submittingReg ? (
+                      <span className="flex items-center gap-2">
+                        <Loader2 className="animate-spin" size={16} />
+                        Submitting...
+                      </span>
+                    ) : (
+                      "Submit Registration"
+                    )}
                   </Button>
                 </form>
               </div>
@@ -270,43 +289,94 @@ export function ProficiencyPortal() {
               key="certificates"
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
+              className="max-w-3xl mx-auto"
             >
-              <div className="grid md:grid-cols-2 gap-6">
-                {[1, 2, 3, 4].map((cert, index) => (
-                  <motion.div
-                    key={cert}
-                    initial={{ opacity: 0, y: 20 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{ delay: index * 0.1 }}
-                    className="p-6 bg-card/50 backdrop-blur-sm border border-primary/20 rounded-xl hover:border-primary/50 transition-all"
+              {/* Lookup Form */}
+              <div className="bg-card/50 backdrop-blur-sm border border-primary/20 rounded-xl p-8 mb-8">
+                <h2 className="text-3xl font-bold text-foreground mb-2">
+                  Certificate Lookup
+                </h2>
+                <p className="text-muted-foreground mb-6">
+                  Enter your registration ID to find your certificates.
+                </p>
+                <form onSubmit={handleCertificateLookup} className="flex gap-3">
+                  <Input
+                    type="text"
+                    placeholder="e.g. PT-2026-001"
+                    value={lookupId}
+                    onChange={(e) => setLookupId(e.target.value)}
+                    className="flex-1 bg-background/50 border-primary/20 text-foreground"
+                    required
+                  />
+                  <Button
+                    type="submit"
+                    disabled={lookingUp}
+                    className="bg-primary hover:bg-primary/80 text-primary-foreground font-semibold px-6"
                   >
-                    <div className="flex items-start justify-between mb-4">
-                      <div className="p-3 bg-primary/10 rounded-lg">
-                        <Award className="text-primary" size={28} />
-                      </div>
-                      <CheckCircle className="text-green-400" size={24} />
-                    </div>
-                    <h3 className="text-xl font-bold text-foreground mb-2">
-                      Certificate #{2024000 + cert}
-                    </h3>
-                    <p className="text-muted-foreground mb-1">
-                      Gold Purity Proficiency Test
-                    </p>
-                    <p className="text-muted-foreground text-sm mb-4">
-                      Issued: March {cert}, 2024
-                    </p>
-                    <div className="flex gap-3">
-                      <Button size="sm" className="flex-1 bg-primary hover:bg-primary/80 text-primary-foreground">
-                        <Download size={16} className="mr-2" />
-                        Download
-                      </Button>
-                      <Button size="sm" variant="outline" className="border-primary/30 text-primary hover:bg-primary/10">
-                        <Mail size={16} />
-                      </Button>
-                    </div>
-                  </motion.div>
-                ))}
+                    {lookingUp ? (
+                      <Loader2 className="animate-spin" size={16} />
+                    ) : (
+                      <span className="flex items-center gap-2">
+                        <Search size={16} />
+                        Look Up
+                      </span>
+                    )}
+                  </Button>
+                </form>
               </div>
+
+              {/* Results */}
+              {hasSearched && !lookingUp && (
+                <div className="space-y-4">
+                  {certificates.length === 0 ? (
+                    <div className="text-center py-12 bg-card/50 backdrop-blur-sm border border-primary/20 rounded-xl">
+                      <XCircle className="text-muted-foreground mx-auto mb-3" size={32} />
+                      <p className="text-muted-foreground">
+                        No certificates found for this registration ID.
+                      </p>
+                      <p className="text-muted-foreground text-sm mt-1">
+                        Please check your ID and try again.
+                      </p>
+                    </div>
+                  ) : (
+                    certificates.map((cert, index) => (
+                      <motion.div
+                        key={cert._id}
+                        initial={{ opacity: 0, y: 20 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        transition={{ delay: index * 0.1 }}
+                        className="p-6 bg-card/50 backdrop-blur-sm border border-primary/20 rounded-xl hover:border-primary/50 transition-all"
+                      >
+                        <div className="flex items-start justify-between mb-4">
+                          <div className="p-3 bg-primary/10 rounded-lg">
+                            <Award className="text-primary" size={28} />
+                          </div>
+                          {cert.status === "Active" ? (
+                            <span className="flex items-center gap-1 text-green-400 text-sm font-semibold">
+                              <CheckCircle size={16} /> Active
+                            </span>
+                          ) : (
+                            <span className="flex items-center gap-1 text-yellow-400 text-sm font-semibold">
+                              <Clock size={16} /> Expired
+                            </span>
+                          )}
+                        </div>
+                        <h3 className="text-xl font-bold text-foreground mb-1">
+                          {cert.certificateId}
+                        </h3>
+                        <p className="text-primary text-sm mb-1">{cert.testType}</p>
+                        <p className="text-muted-foreground text-sm mb-1">
+                          Organization: {cert.organizationName}
+                        </p>
+                        <p className="text-muted-foreground text-sm">
+                          Issued: {new Date(cert.issueDate).toLocaleDateString()} &bull;
+                          Valid Until: {new Date(cert.validUntil).toLocaleDateString()}
+                        </p>
+                      </motion.div>
+                    ))
+                  )}
+                </div>
+              )}
             </motion.div>
           )}
         </div>
