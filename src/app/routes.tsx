@@ -17,6 +17,7 @@ import { BlogManager } from "./pages/admin/BlogManager";
 import { JobApplications } from "./pages/admin/JobApplications";
 import { ProficiencyRegistrations } from "./pages/admin/ProficiencyRegistrations";
 import { CertificateManager } from "./pages/admin/CertificateManager";
+import { JobListings } from "./pages/admin/JobListings";
 import { HallmarkingJourney } from "./pages/HallmarkingJourney";
 import { NotFound } from "./pages/NotFound";
 
@@ -48,6 +49,7 @@ export const router = createBrowserRouter([
         children: [
           { path: "dashboard", Component: Dashboard },
           { path: "blog", Component: BlogManager },
+          { path: "jobs", Component: JobListings },
           { path: "applications", Component: JobApplications },
           { path: "registrations", Component: ProficiencyRegistrations },
           { path: "certificates", Component: CertificateManager },

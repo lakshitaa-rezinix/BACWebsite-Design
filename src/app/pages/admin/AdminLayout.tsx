@@ -6,12 +6,14 @@ import {
   ClipboardList,
   Award,
   LogOut,
+  ListChecks,
 } from "lucide-react";
 import { isAuthenticated, clearToken } from "../../lib/api";
 
 const navItems = [
   { path: "/admin/dashboard", label: "Dashboard", icon: LayoutDashboard },
   { path: "/admin/blog", label: "Blog Posts", icon: FileText },
+  { path: "/admin/jobs", label: "Job Listings", icon: ListChecks },
   { path: "/admin/applications", label: "Job Applications", icon: Briefcase },
   {
     path: "/admin/registrations",
