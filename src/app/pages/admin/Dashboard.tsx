@@ -5,65 +5,93 @@ import {
   ClipboardList,
   Award,
   TrendingUp,
-  Users,
+  Loader2,
 } from "lucide-react";
+import { useState, useEffect } from "react";
+import { api } from "../../lib/api";
 
-const stats = [
-  {
-    label: "Blog Posts",
-    value: "5",
-    change: "+2 this month",
-    icon: FileText,
-  },
-  {
-    label: "Job Applications",
-    value: "24",
-    change: "+8 this week",
-    icon: Briefcase,
-  },
-  {
-    label: "PT Registrations",
-    value: "142",
-    change: "+12 this month",
-    icon: ClipboardList,
-  },
-  {
-    label: "Certificates Issued",
-    value: "89",
-    change: "+5 this week",
-    icon: Award,
-  },
-];
+interface StatCard {
+  label: string;
+  value: number;
+  icon: typeof FileText;
+}
 
-const recentActivity = [
-  {
-    action: "New job application received",
-    detail: "Senior Quality Analyst - Mumbai",
-    time: "2 hours ago",
-  },
-  {
-    action: "PT registration completed",
-    detail: "XRF Proficiency Test - Delhi Lab",
-    time: "5 hours ago",
-  },
-  {
-    action: "Certificate issued",
-    detail: "PT-2024-089 - Gold Hallmarking",
-    time: "1 day ago",
-  },
-  {
-    action: "Blog post published",
-    detail: "BIS Award Recognition 2024",
-    time: "2 days ago",
-  },
-  {
-    action: "New job application received",
-    detail: "Lab Technician - Surat",
-    time: "3 days ago",
-  },
-];
+interface ActivityItem {
+  type: "application" | "registration";
+  title: string;
+  detail: string;
+  date: string;
+}
 
 export function Dashboard() {
+  const [stats, setStats] = useState<StatCard[]>([]);
+  const [activity, setActivity] = useState<ActivityItem[]>([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    async function fetchData() {
+      try {
+        const [jobs, applications, registrations, certificates] = await Promise.all([
+          api.getAllJobs(),
+          api.getApplications(),
+          api.getRegistrations(),
+          api.getCertificates(),
+        ]);
+
+        setStats([
+          { label: "Active Jobs", value: jobs.length, icon: Briefcase },
+          { label: "Job Applications", value: applications.length, icon: FileText },
+          { label: "PT Registrations", value: registrations.length, icon: ClipboardList },
+          { label: "Certificates Issued", value: certificates.length, icon: Award },
+        ]);
+
+        // Build recent activity from latest 5 applications + registrations combined
+        const appItems: ActivityItem[] = applications.slice(0, 5).map((a: any) => ({
+          type: "application" as const,
+          title: "New job application",
+          detail: `${a.name} applied for ${a.jobTitle}`,
+          date: a.createdAt,
+        }));
+        const regItems: ActivityItem[] = registrations.slice(0, 5).map((r: any) => ({
+          type: "registration" as const,
+          title: "PT registration submitted",
+          detail: `${r.organizationName} - ${r.testType}`,
+          date: r.createdAt,
+        }));
+
+        const combined = [...appItems, ...regItems]
+          .sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime())
+          .slice(0, 5);
+
+        setActivity(combined);
+      } catch {
+        // Silently handle — stats will show 0s
+      } finally {
+        setLoading(false);
+      }
+    }
+    fetchData();
+  }, []);
+
+  const formatTimeAgo = (dateStr: string) => {
+    const diff = Date.now() - new Date(dateStr).getTime();
+    const minutes = Math.floor(diff / 60000);
+    if (minutes < 60) return `${minutes}m ago`;
+    const hours = Math.floor(minutes / 60);
+    if (hours < 24) return `${hours}h ago`;
+    const days = Math.floor(hours / 24);
+    return `${days}d ago`;
+  };
+
+  if (loading) {
+    return (
+      <div className="flex items-center justify-center py-20">
+        <Loader2 className="animate-spin text-primary" size={32} />
+        <span className="ml-3 text-muted-foreground">Loading dashboard...</span>
+      </div>
+    );
+  }
+
   return (
     <div>
       <div className="mb-8">
@@ -89,7 +117,7 @@ export function Dashboard() {
               </div>
               <span className="text-green-400 text-xs font-medium flex items-center gap-1">
                 <TrendingUp size={12} />
-                {stat.change}
+                Live
               </span>
             </div>
             <div className="text-3xl font-bold text-foreground mb-1">
@@ -111,23 +139,29 @@ export function Dashboard() {
           Recent Activity
         </h2>
         <div className="space-y-4">
-          {recentActivity.map((item, index) => (
-            <div
-              key={index}
-              className="flex items-center gap-4 p-4 bg-background/30 rounded-lg border border-primary/10"
-            >
-              <div className="w-2 h-2 bg-primary rounded-full shrink-0" />
-              <div className="flex-1 min-w-0">
-                <p className="text-foreground text-sm font-medium">
-                  {item.action}
-                </p>
-                <p className="text-muted-foreground text-xs">{item.detail}</p>
+          {activity.length === 0 ? (
+            <p className="text-muted-foreground text-sm py-4 text-center">
+              No recent activity yet.
+            </p>
+          ) : (
+            activity.map((item, index) => (
+              <div
+                key={index}
+                className="flex items-center gap-4 p-4 bg-background/30 rounded-lg border border-primary/10"
+              >
+                <div className="w-2 h-2 bg-primary rounded-full shrink-0" />
+                <div className="flex-1 min-w-0">
+                  <p className="text-foreground text-sm font-medium">
+                    {item.title}
+                  </p>
+                  <p className="text-muted-foreground text-xs">{item.detail}</p>
+                </div>
+                <span className="text-muted-foreground text-xs whitespace-nowrap">
+                  {formatTimeAgo(item.date)}
+                </span>
               </div>
-              <span className="text-muted-foreground text-xs whitespace-nowrap">
-                {item.time}
-              </span>
-            </div>
-          ))}
+            ))
+          )}
         </div>
       </motion.div>
     </div>
