@@ -23,7 +23,6 @@ export function Root() {
     { path: "/about", label: "About" },
     { path: "/services", label: "Our Services" },
     { path: "/proficiency-portal", label: "PT Portal" },
-    { path: "/srms", label: "SRMS" },
     { path: "/careers", label: "Careers" },
     { path: "/contact", label: "Contact" },
   ];
