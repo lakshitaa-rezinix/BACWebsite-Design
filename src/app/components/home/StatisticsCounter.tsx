@@ -1,6 +1,6 @@
 import { motion, useMotionValue, animate, useInView } from "motion/react";
 import { useEffect, useState, useRef } from "react";
-import { Package, MapPin, CheckCircle } from "lucide-react";
+import { Package, MapPin } from "lucide-react";
 import { SplitTextReveal } from "../animations/AnimatedText";
 import { TiltCard } from "../animations/TiltCard";
 
@@ -41,17 +41,10 @@ export function StatisticsCounter() {
     },
     {
       icon: MapPin,
-      value: 7,
+      value: 9,
       suffix: "",
       label: "Centers",
       description: "Across India"
-    },
-    {
-      icon: CheckCircle,
-      value: 100,
-      suffix: "%",
-      label: "Compliance",
-      description: "Quality assurance"
     },
   ];
 
@@ -75,7 +68,7 @@ export function StatisticsCounter() {
           </motion.p>
         </div>
 
-        <div className="grid md:grid-cols-3 gap-8">
+        <div className="grid md:grid-cols-2 gap-8 max-w-3xl mx-auto">
           {stats.map((stat, index) => (
             <motion.div
               key={index}

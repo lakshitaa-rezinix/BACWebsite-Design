@@ -19,13 +19,13 @@ export function Contact() {
     {
       icon: Mail,
       title: "Email",
-      details: [COMPANY.email, "support@bombayassay.com"],
+      details: [COMPANY.email],
       link: `mailto:${COMPANY.email}`,
     },
     {
       icon: MapPin,
       title: "Head Office",
-      details: ["MG Road, Bangalore", "Karnataka 560001, India"],
+      details: ["First Floor, No. 750, 33 Road, A Cross, 9th Main", "Jayanagar 4th Block, Bangalore - 560011"],
       link: null,
     },
     {
@@ -215,7 +215,7 @@ export function Contact() {
               {/* Google Maps Embed */}
               <div className="bg-card/50 backdrop-blur-sm border border-primary/20 rounded-2xl overflow-hidden aspect-video">
                 <iframe
-                  src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3887.985!2d77.6065!3d12.9716!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3bae1670c9b44e6d%3A0xf8dfc3e8517e4fe0!2sMG%20Road%2C%20Bengaluru%2C%20Karnataka!5e0!3m2!1sen!2sin!4v1"
+                  src="https://www.google.com/maps/embed/v1/place?key=AIzaSyBFw0Qbyq9zTFTd-tUY6dZWTgaQzuU17R8&q=Jayanagar+4th+Block+Bangalore+560011&zoom=14"
                   width="100%"
                   height="100%"
                   style={{ border: 0 }}
@@ -232,7 +232,7 @@ export function Contact() {
                   Visit Our Centers
                 </h3>
                 <p className="text-muted-foreground mb-6">
-                  We have 7 centers across India ready to serve you. Click on
+                  We have 9 centers across India ready to serve you. Click on
                   any location to learn more.
                 </p>
                 <div className="space-y-3">

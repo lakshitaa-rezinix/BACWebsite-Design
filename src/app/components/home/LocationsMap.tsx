@@ -26,7 +26,7 @@ export function LocationsMap() {
             transition={{ delay: 0.3 }}
             className="text-muted-foreground text-lg"
           >
-            7 centers across India for your convenience
+            9 centers across India for your convenience
           </motion.p>
         </div>
 

@@ -2,12 +2,12 @@ export const COMPANY = {
   name: "BOMBAY ASSAY COMPANY",
   shortName: "BAC",
   tagline: "BIS-Recognized Hallmarking Center",
-  hq: "Bangalore",
+  hq: "Head Office",
   whatsapp: "919999999999",
   email: "admin@bombayassay.com",
   phone: "+91-9606803916",
   about: `BOMBAY ASSAY COMPANY (BAC), a jewelry Quality Assurance firm creating new milestones in the field of assaying (testing) and hallmarking of precious metal items (gold, silver, platinum and palladium) in India. Being accredited to Bureau of Indian Standards (BIS), BAC aimed to bring a revolution in the Indian gold hallmarking industry. The process and facility of BAC matches and exceeds all the renowned global standards for the precious metal assessment.`,
-  aboutExtended: `Having its HO at Bangalore and its branches at Indian economical capital Mumbai, another metro city Kolkata and Southern industrial hub Hosur, Western coast jewelry hub Udupi, the capital city Delhi and Diamond capital Surat, it can cover the vast Indian market. Machineries used in the assay centers, the highly skilled resources to handle the process and the guidance & backing of top notch think tanks of the industry, keeps the BAC an edge above the others.`,
+  aboutExtended: `Having its HO at Bangalore and its branches at Indian economical capital Mumbai, another metro city Kolkata and Southern industrial hub Hosur, Western coast jewelry hub Udupi, the capital city Delhi, and Pantnagar, it can cover the vast Indian market. Machineries used in the assay centers, the highly skilled resources to handle the process and the guidance & backing of top notch think tanks of the industry, keeps the BAC an edge above the others.`,
   purpose:
     "To be a leader in the Indian Precious metal hallmarking & Quality Assurance through exclusive corporate Clientship",
   vision:
@@ -30,8 +30,8 @@ export interface Location {
 
 export const LOCATIONS: Location[] = [
   {
-    id: "bangalore",
-    city: "Bangalore",
+    id: "head-office",
+    city: "Head Office",
     isHQ: true,
     address: "First Floor, No. 750, 33 Road, A Cross, 9th Main, Jayanagar 4th Block, Bangalore - 560011",
     phone: "+91-9606803916",
@@ -44,25 +44,53 @@ export const LOCATIONS: Location[] = [
       "Our headquarters and primary quality assurance center, leading BAC's operations across India.",
   },
   {
-    id: "mumbai",
-    city: "Mumbai",
+    id: "mumbai-1",
+    city: "Mumbai-1",
+    isHQ: false,
+    address: "14 A, Paperbox, Ground Floor, Off Mahakali Caves Road, Andheri East, Mumbai, Maharashtra - 400093",
+    phone: "+91-9606450305",
+    email: "qm.bacm1@bombayassay.com",
+    teamPhoto: "/images/team/team-mumbai.jpeg",
+    mapEmbedUrl:
+      "https://www.google.com/maps/embed/v1/place?key=AIzaSyBFw0Qbyq9zTFTd-tUY6dZWTgaQzuU17R8&q=Mahakali+Caves+Road+Andheri+East+Mumbai+400093&zoom=14",
+    mapPosition: { top: "54%", left: "22%" },
+    description:
+      "Serving Mumbai's thriving jewelry market from Andheri East.",
+  },
+  {
+    id: "mumbai-2",
+    city: "Mumbai-2",
     isHQ: false,
     address: "No. 103, 104, 105, 106, Floral Deck Plaza, 15A/15B, MIDC Central Road, Andheri East, Mumbai - 400093",
-    phone: "+91-22-46036812",
+    phone: "+91-9606752916",
     email: "mumbai@bombayassay.com",
     teamPhoto: "/images/team/team-mumbai.jpeg",
     mapEmbedUrl:
       "https://www.google.com/maps/embed/v1/place?key=AIzaSyBFw0Qbyq9zTFTd-tUY6dZWTgaQzuU17R8&q=Floral+Deck+Plaza+MIDC+Central+Road+Andheri+East+Mumbai+400093&zoom=14",
-    mapPosition: { top: "54%", left: "22%" },
+    mapPosition: { top: "54%", left: "24%" },
     description:
-      "Located in the heart of India's economic capital, serving Mumbai's thriving jewelry market at Zaveri Bazaar.",
+      "Located in the heart of India's economic capital, serving Mumbai's thriving jewelry market.",
+  },
+  {
+    id: "mumbai-qac",
+    city: "Mumbai-QAC",
+    isHQ: false,
+    address: "E-219, 2nd Floor, Floral Deck, MIDC Central Road, Andheri East - 400093",
+    phone: "+91-9606728916",
+    email: "admin@qacenter.co.in",
+    teamPhoto: "/images/team/team-mumbai.jpeg",
+    mapEmbedUrl:
+      "https://www.google.com/maps/embed/v1/place?key=AIzaSyBFw0Qbyq9zTFTd-tUY6dZWTgaQzuU17R8&q=MIDC+Central+Road+Andheri+East+Mumbai+400093&zoom=14",
+    mapPosition: { top: "54%", left: "20%" },
+    description:
+      "Quality Assurance Center serving Mumbai's jewelry industry.",
   },
   {
     id: "delhi",
     city: "Delhi",
     isHQ: false,
     address: "3rd Floor, #67, Phase 3, Okhla Industrial Estate, New Delhi - 110020",
-    phone: "+91-9606450307",
+    phone: "+91-9606752916",
     email: "delhi@bombayassay.com",
     teamPhoto: "/images/team/team-delhi.jpeg",
     mapEmbedUrl:
@@ -86,25 +114,25 @@ export const LOCATIONS: Location[] = [
       "Our eastern India hub, catering to Kolkata's historic gold jewelry market.",
   },
   {
-    id: "surat",
-    city: "Surat",
+    id: "pantnagar-ses",
+    city: "Pantnagar-SES",
     isHQ: false,
-    address: "#501, 502 International Finance Center, Nr. Vesu Fire Station, VIP Road, Vesu, Surat - 395007",
-    phone: "+91-9606494312",
-    email: "surat@bombayassay.com",
-    teamPhoto: "/images/team/team-surat.jpeg",
+    address: "CP-31, 3rd Floor, Sector City Park, Rudrapur, Udham Singh Nagar (Uttarakhand), Pin Code - 263153",
+    phone: "+91-9606045205",
+    email: "sesanalyticals@gmail.com",
+    teamPhoto: "/images/team/hods-with-titan.jpeg",
     mapEmbedUrl:
-      "https://www.google.com/maps/embed/v1/place?key=AIzaSyBFw0Qbyq9zTFTd-tUY6dZWTgaQzuU17R8&q=International+Finance+Center+Vesu+Surat+395007&zoom=14",
-    mapPosition: { top: "47%", left: "21%" },
+      "https://www.google.com/maps/embed/v1/place?key=AIzaSyBFw0Qbyq9zTFTd-tUY6dZWTgaQzuU17R8&q=Rudrapur+Udham+Singh+Nagar+Uttarakhand+263153&zoom=14",
+    mapPosition: { top: "18%", left: "40%" },
     description:
-      "Strategically located in India's Diamond capital, serving the diamond and gold trade hub.",
+      "Serving the Uttarakhand region's precious metals industry.",
   },
   {
     id: "hosur",
     city: "Hosur",
     isHQ: false,
     address: "Plot No. 42/A4, 1st Floor, 5th Cross, Sipcot Industrial Complex, Phase-1, Mookandapalli Post, Hosur - 635126",
-    phone: "+91-4344295916",
+    phone: "+91-9606758916",
     email: "hosur@bombayassay.com",
     teamPhoto: "/images/team/team-hosur.jpeg",
     mapEmbedUrl:
@@ -130,50 +158,41 @@ export const LOCATIONS: Location[] = [
 ];
 
 export const CLIENTS = [
-  { name: "Titan Company", description: "Exclusive Partner", logo: "/images/clients/titan.svg" },
-  { name: "Caratlane", description: "Trusted Partner", logo: "/images/clients/caratlane.svg" },
+  { name: "CaratLane", description: "Trusted Partner", logo: "/images/clients/caratlane.jpg" },
   { name: "Tanishq", description: "Quality Partner", logo: "/images/clients/tanishq.svg" },
+  { name: "Abharan", description: "Trusted Partner", logo: "/images/clients/abharan.svg" },
+  { name: "Joyalukkas", description: "Retail Partner", logo: "/images/clients/joyalukkas.png" },
+  { name: "Indriya", description: "Trusted Partner", logo: "/images/clients/indriya.svg" },
+  { name: "H.K. Designs", description: "Design Partner", logo: "/images/clients/hk-logo.png" },
 ];
 
 export const MILESTONES = [
   {
-    year: "2004",
+    year: "2020",
     title: "Company Founded",
     description:
-      "BOMBAY ASSAY COMPANY established in Bangalore with a vision to revolutionize India's hallmarking industry.",
+      "BOMBAY ASSAY COMPANY established in Bangalore with a vision to revolutionize India's hallmarking industry. Launched digital Proficiency Testing Portal.",
   },
   {
-    year: "2008",
-    title: "BIS Recognition",
+    year: "2021",
+    title: "BIS Recognition & Titan Partnership",
     description:
-      "Received official accreditation from Bureau of Indian Standards (BIS) as a recognized hallmarking center.",
-  },
-  {
-    year: "2012",
-    title: "Titan Partnership",
-    description:
-      "Became the exclusive hallmarking partner for Titan Company Limited, India's premier jewelry brand.",
-  },
-  {
-    year: "2016",
-    title: "Pan-India Expansion",
-    description:
-      "Expanded to 5 operational centers across Mumbai, Delhi, Kolkata, Hosur, and Udupi.",
-  },
-  {
-    year: "2020",
-    title: "Digital Transformation",
-    description:
-      "Launched the digital Proficiency Testing Portal for online registration and certificate management.",
+      "Received official accreditation from Bureau of Indian Standards (BIS) and became the exclusive hallmarking partner for Titan Company Limited.",
   },
   {
     year: "2023",
-    title: "7 Centers & 10M+ Milestone",
+    title: "Pan-India Expansion",
     description:
-      "Reached 7 operational centers and crossed 10 million pieces hallmarked annually with Surat center.",
+      "Expanded operations across Mumbai, Delhi, Kolkata, Hosur, and Udupi, establishing a strong national presence.",
   },
   {
     year: "2024",
+    title: "9 Centers & 10M+ Milestone",
+    description:
+      "Reached 9 operational centers and crossed 10 million pieces hallmarked annually.",
+  },
+  {
+    year: "2025",
     title: "BIS Excellence Award",
     description:
       "Recognized by BIS for outstanding contribution to hallmarking standards in India.",
@@ -183,7 +202,7 @@ export const MILESTONES = [
 export const SERVICES = [
   {
     id: "hallmarking",
-    title: "Hallmarking Services",
+    title: "Hallmarking",
     shortDesc: "BIS-certified hallmarking for gold, silver, and platinum jewelry",
     icon: "Shield",
   },
@@ -192,6 +211,12 @@ export const SERVICES = [
     title: "Testing & Assaying",
     shortDesc: "XRF and Fire Assay methods for precise precious metal analysis",
     icon: "FlaskConical",
+  },
+  {
+    id: "destructive-testing",
+    title: "Destructive Testing (DT)",
+    shortDesc: "Fire Assay and acid parting for definitive metal purity determination",
+    icon: "Flame",
   },
   {
     id: "quality-control",

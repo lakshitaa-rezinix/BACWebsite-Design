@@ -1,6 +1,6 @@
 import { motion, useMotionValue, animate as motionAnimate } from "motion/react";
 import { Link } from "react-router";
-import { ArrowDown, ChevronRight } from "lucide-react";
+import { ChevronRight } from "lucide-react";
 import { Button } from "../ui/button";
 import { useState, useEffect, type CSSProperties } from "react";
 import { TypewriterText } from "../animations/AnimatedText";
@@ -110,12 +110,12 @@ function FloatingPaths({ position }: { position: number }) {
   );
 }
 
-const TITLE_WORDS = ["India's", "Benchmark", "in", "Jewelry", "Quality", "&", "Hallmarking"];
-const GOLD_WORDS = new Set(["Quality", "&", "Hallmarking"]);
+const TITLE_WORDS = ["India's", "Benchmark", "in", "Jewellery", "Quality", "Assurance", "and", "Hallmarking"];
+const GOLD_WORDS = new Set(["Quality", "Assurance", "and", "Hallmarking"]);
 
 export function HeroBackgroundPaths() {
   return (
-    <section className="relative min-h-screen w-full flex flex-col items-center justify-center overflow-hidden bg-background">
+    <section className="relative h-[calc(100vh-5rem)] w-full flex flex-col items-center justify-center overflow-hidden bg-background">
       {/* Animated Gold SVG Paths */}
       <div className="absolute inset-0">
         <FloatingPaths position={1} />
@@ -178,7 +178,7 @@ export function HeroBackgroundPaths() {
           transition={{ duration: 1.2 }}
         >
           {/* Animated per-letter heading */}
-          <h1 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-bold mb-5 tracking-tight leading-[1.3]">
+          <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold mb-4 tracking-tight leading-[1.25]">
             {TITLE_WORDS.map((word, wordIndex) => (
               <span key={wordIndex} className="inline-block mr-[0.25em] last:mr-0">
                 {word.split("").map((letter, letterIndex) => (
@@ -213,7 +213,7 @@ export function HeroBackgroundPaths() {
             className="text-foreground/60 text-base md:text-lg mb-7 max-w-2xl mx-auto"
           >
             <TypewriterText
-              text="BIS-recognized hallmarking center | 10M+ pieces annually"
+              text="Complete Solutions for Precious Metal Testing"
               speed={28}
               startDelay={0}
             />
@@ -224,7 +224,7 @@ export function HeroBackgroundPaths() {
             initial={{ opacity: 0, y: 20, scale: 0.95 }}
             animate={{ opacity: 1, y: 0, scale: 1 }}
             transition={{ type: "spring", stiffness: 200, damping: 25, delay: 1.1 }}
-            className="flex flex-wrap gap-4 justify-center mb-8"
+            className="flex flex-wrap gap-4 justify-center mb-6"
           >
             <MagneticButton>
               <Link to="/proficiency-portal">
@@ -266,48 +266,42 @@ export function HeroBackgroundPaths() {
               animate={{ backgroundPosition: ["200% 0", "-200% 0"] }}
               transition={{ duration: 3.5, repeat: Infinity, ease: "linear", repeatDelay: 4 }}
             />
-            <div className="flex items-center gap-10">
+            <div className="flex flex-wrap items-center justify-center gap-6 sm:gap-8">
               <div className="text-center">
-                <div className="text-3xl font-bold text-primary tracking-tight">
+                <div className="text-2xl sm:text-3xl font-bold text-primary tracking-tight">
                   <AnimatedCounter value={10} suffix="M+" />
                 </div>
-                <div className="text-muted-foreground text-xs mt-1">Pieces Annually</div>
+                <div className="text-muted-foreground text-xs mt-1">Annual Capacity</div>
               </div>
-              <div className="w-px h-10 bg-primary/20" />
+              <div className="w-px h-10 bg-primary/20 hidden sm:block" />
               <div className="text-center">
-                <div className="text-3xl font-bold text-primary tracking-tight">
-                  <AnimatedCounter value={7} />
+                <div className="text-2xl sm:text-3xl font-bold text-primary tracking-tight">BIS & NABL</div>
+                <div className="text-muted-foreground text-xs mt-1">Accredited</div>
+              </div>
+              <div className="w-px h-10 bg-primary/20 hidden sm:block" />
+              <div className="text-center">
+                <div className="text-2xl sm:text-3xl font-bold text-primary tracking-tight">ISO</div>
+                <div className="text-muted-foreground text-xs mt-1">Certified</div>
+              </div>
+              <div className="w-px h-10 bg-primary/20 hidden sm:block" />
+              <div className="text-center">
+                <div className="text-2xl sm:text-3xl font-bold text-primary tracking-tight">
+                  <AnimatedCounter value={9} />
                 </div>
                 <div className="text-muted-foreground text-xs mt-1">Centers Across India</div>
               </div>
-              <div className="w-px h-10 bg-primary/20" />
+              <div className="w-px h-10 bg-primary/20 hidden sm:block" />
               <div className="text-center">
-                <div className="text-3xl font-bold text-primary tracking-tight">
-                  <AnimatedCounter value={20} suffix="+" />
+                <div className="text-2xl sm:text-3xl font-bold text-primary tracking-tight">
+                  <AnimatedCounter value={5} suffix="+" />
                 </div>
-                <div className="text-muted-foreground text-xs mt-1">Years of Trust</div>
+                <div className="text-muted-foreground text-xs mt-1">Years</div>
               </div>
             </div>
           </motion.div>
         </motion.div>
       </div>
 
-      {/* Scroll Indicator */}
-      <motion.div
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        transition={{ delay: 1.8 }}
-        className="absolute bottom-8 left-1/2 -translate-x-1/2 z-10"
-      >
-        <motion.div
-          animate={{ y: [0, 10, 0] }}
-          transition={{ duration: 2, repeat: Infinity, ease: "easeInOut" }}
-          className="flex flex-col items-center gap-2 text-primary/60"
-        >
-          <span className="text-xs uppercase tracking-wider">Scroll</span>
-          <ArrowDown size={20} />
-        </motion.div>
-      </motion.div>
     </section>
   );
 }

@@ -21,13 +21,10 @@ export function Root() {
   const navLinks = [
     { path: "/", label: "Home" },
     { path: "/about", label: "About" },
-    { path: "/services", label: "Services" },
-    { path: "/gallery", label: "Gallery" },
-    { path: "/proficiency-portal", label: "Proficiency Portal" },
+    { path: "/services", label: "Our Services" },
+    { path: "/proficiency-portal", label: "PT Portal" },
     { path: "/careers", label: "Careers" },
-    { path: "/blog", label: "Blog" },
     { path: "/contact", label: "Contact" },
-    { path: "/hallmarking-journey", label: "Hallmarking Journey" },
   ];
 
   const isActive = (path: string) => {
@@ -163,7 +160,7 @@ export function Root() {
                 </span>
               </Link>
               <p className="text-muted-foreground text-sm leading-relaxed mb-4">
-                India's benchmark in jewelry quality assurance and hallmarking.
+                India's benchmark in jewellery quality assurance and hallmarking.
                 BIS-recognized center and exclusive partner to Titan Company.
               </p>
               <p className="text-muted-foreground text-sm">
@@ -186,8 +183,6 @@ export function Root() {
                 {[
                   { to: "/about", label: "About Us" },
                   { to: "/services", label: "Services" },
-                  { to: "/gallery", label: "Gallery" },
-                  { to: "/blog", label: "Blog & News" },
                   { to: "/careers", label: "Careers" },
                   { to: "/contact", label: "Contact" },
                 ].map((link) => (

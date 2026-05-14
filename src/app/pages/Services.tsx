@@ -1,5 +1,5 @@
 import { motion } from "motion/react";
-import { Award, Microscope, Shield, Diamond, CheckCircle, ArrowRight, ChevronRight } from "lucide-react";
+import { Award, Microscope, Shield, Diamond, Flame, CheckCircle, ArrowRight, ChevronRight } from "lucide-react";
 import { Link } from "react-router";
 import { Button } from "../components/ui/button";
 import { SplitTextReveal, GoldShimmerText } from "../components/animations/AnimatedText";
@@ -10,7 +10,7 @@ const SERVICES = [
     num: "01",
     icon: Award,
     tag: "BIS Certified",
-    title: "Hallmarking Services",
+    title: "Hallmarking",
     description:
       "BAC is a BIS-recognized hallmarking center authorized to stamp gold, silver, and platinum jewelry with the official BIS Hallmark, purity grade, and HUID — ensuring authenticity for consumers and compliance for manufacturers.",
     features: [
@@ -21,7 +21,6 @@ const SERVICES = [
       "Fast turnaround processing",
       "Digital record keeping",
     ],
-    process: ["Sample Submission", "Purity Testing", "Hallmark Stamping", "Certificate Issuance"],
     image: "/images/hallmarking/set1.png",
     imageAlt: "Full bridal gold jewelry set — choker, earrings, and bangles awaiting hallmarking",
     imageCaption: "Every piece carries the BIS logo, purity grade, and a unique HUID",
@@ -41,13 +40,31 @@ const SERVICES = [
       "Multi-metal identification",
       "Detailed analytical reports",
     ],
-    process: ["Sample Collection", "Laboratory Analysis", "Quality Verification", "Report Generation"],
     image: "/images/hallmarking/set2.png",
     imageAlt: "Gold choker and long earring set — precision purity analysis before certification",
     imageCaption: "Precision analysis for every piece — destructive and non-destructive options",
   },
   {
     num: "03",
+    icon: Flame,
+    tag: "Fire Assay · Acid Parting",
+    title: "Destructive Testing (DT)",
+    description:
+      "Traditional Fire Assay and acid parting techniques for definitive metal purity determination. The gold standard in precious metal analysis, providing the most accurate results through controlled sample destruction.",
+    features: [
+      "Fire Assay cupellation",
+      "Acid parting separation",
+      "Gravimetric purity analysis",
+      "Silver parting operations",
+      "Cupellation furnace testing",
+      "Certified analytical reports",
+    ],
+    image: "/images/hallmarking/set3.png",
+    imageAlt: "Gold necklace, jhumka earrings, and bangles set representing destructive testing analysis",
+    imageCaption: "Definitive purity determination through controlled sample analysis",
+  },
+  {
+    num: "04",
     icon: Shield,
     tag: "ISO Compliant",
     title: "Total Quality Control",
@@ -61,13 +78,12 @@ const SERVICES = [
       "End-to-end documentation",
       "Continuous performance monitoring",
     ],
-    process: ["Initial Assessment", "Process Review", "Implementation", "Ongoing Support"],
-    image: "/images/hallmarking/set3.png",
-    imageAlt: "Gold necklace, jhumka earrings, and bangles set representing comprehensive quality assurance",
+    image: "/images/hallmarking/set4.png",
+    imageAlt: "Two layered gold necklace sets representing comprehensive quality assurance",
     imageCaption: "Comprehensive oversight across every stage of your quality chain",
   },
   {
-    num: "04",
+    num: "05",
     icon: Diamond,
     tag: "Gemological",
     title: "Diamond Certification",
@@ -81,33 +97,12 @@ const SERVICES = [
       "International standard certification",
       "Detailed grading reports",
     ],
-    process: ["Stone Submission", "Gemological Analysis", "Grading Assessment", "Certificate Delivery"],
-    image: "/images/hallmarking/set4.png",
-    imageAlt: "Two layered gold necklace sets certified to gemological standards",
+    image: "/images/hallmarking/set5.png",
+    imageAlt: "Necklace and jhumka earrings set certified to gemological standards",
     imageCaption: "GIA-aligned certification for diamonds and precious stones",
   },
 ];
 
-function ProcessFlow({ steps }: { steps: string[] }) {
-  return (
-    <div className="flex flex-wrap items-center gap-2 mt-6">
-      {steps.map((step, i) => (
-        <div key={i} className="flex items-center gap-2">
-          <div className="flex items-center gap-2 px-3 py-1.5 rounded-full border border-primary/25 bg-primary/5 text-xs font-medium text-foreground/70">
-            <span
-              className="w-4 h-4 rounded-full bg-primary/20 flex items-center justify-center text-primary font-bold"
-              style={{ fontSize: "9px" }}
-            >
-              {i + 1}
-            </span>
-            {step}
-          </div>
-          {i < steps.length - 1 && <ArrowRight size={12} className="text-primary/30 flex-shrink-0" />}
-        </div>
-      ))}
-    </div>
-  );
-}
 
 export function Services() {
   return (
@@ -248,11 +243,6 @@ export function Services() {
                     ))}
                   </div>
 
-                  {/* Process flow */}
-                  <div className="pt-5 border-t border-primary/10">
-                    <p className="text-xs text-muted-foreground uppercase tracking-[0.2em] mb-3">Process</p>
-                    <ProcessFlow steps={service.process} />
-                  </div>
                 </motion.div>
 
                 {/* Image */}

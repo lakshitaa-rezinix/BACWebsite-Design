@@ -1,5 +1,5 @@
 import { motion } from "motion/react";
-import { Award, Microscope, Shield, Diamond, ArrowRight } from "lucide-react";
+import { Award, Microscope, Shield, Flame, ArrowRight } from "lucide-react";
 import { Link } from "react-router";
 import { SplitTextReveal } from "../animations/AnimatedText";
 import { TiltCard } from "../animations/TiltCard";
@@ -8,7 +8,7 @@ const SERVICES = [
   {
     num: "01",
     icon: Award,
-    title: "Hallmarking Services",
+    title: "Hallmarking",
     description: "BIS-certified hallmarking for gold, silver, and platinum jewelry. Precision-stamped with the official BIS Hallmark, HUID, and purity grade.",
     tag: "BIS Certified",
   },
@@ -28,10 +28,10 @@ const SERVICES = [
   },
   {
     num: "04",
-    icon: Diamond,
-    title: "Diamond Certification",
-    description: "Expert gemological evaluation and certification for diamonds and precious stones, graded to international GIA-aligned standards.",
-    tag: "Gemological",
+    icon: Flame,
+    title: "Destructive Testing (DT)",
+    description: "Fire Assay and acid parting techniques for precise metal purity determination through controlled sample destruction.",
+    tag: "Fire Assay · Acid Parting",
   },
 ];
 
@@ -85,7 +85,7 @@ export function ServicesGrid() {
 
                     {/* Ghost number watermark */}
                     <span
-                      className="absolute -top-4 -right-2 text-[7rem] font-bold leading-none select-none pointer-events-none text-primary/[0.04] group-hover:text-primary/[0.07] transition-colors duration-500"
+                      className="absolute -top-4 right-4 text-[7rem] font-bold leading-none select-none pointer-events-none text-primary/[0.04] group-hover:text-primary/[0.07] transition-colors duration-500"
                       style={{ fontFamily: "'Cormorant Garamond', serif" }}
                       aria-hidden="true"
                     >

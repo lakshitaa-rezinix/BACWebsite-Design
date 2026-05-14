@@ -214,7 +214,6 @@ export const TEAM_IMAGES = {
   mumbai: "/images/team/team-mumbai.jpeg",
   delhi: "/images/team/team-delhi.jpeg",
   kolkata: "/images/team/team-kolkata.jpeg",
-  surat: "/images/team/team-surat.jpeg",
   hosur: "/images/team/team-hosur.jpeg",
   udupi: "/images/team/team-udupi.jpeg",
 };
