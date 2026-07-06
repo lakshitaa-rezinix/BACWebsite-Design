@@ -1,6 +1,7 @@
 /.claude
 node_modules
 dist
+revisions/
 Re_ Preview of the New Website Design/
 server/.env
 server/node_modules
