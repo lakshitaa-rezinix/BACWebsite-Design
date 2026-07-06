@@ -1,14 +1,17 @@
 import { motion } from "motion/react";
 import { Mail, Phone, MapPin, Clock, Send, ArrowRight } from "lucide-react";
+import { useState } from "react";
 import { Button } from "../components/ui/button";
 import { Input } from "../components/ui/input";
 import { Link } from "react-router";
 import { LOCATIONS, COMPANY } from "../data/constants";
 import { toast } from "sonner";
 import { SplitTextReveal, GoldShimmerText } from "../components/animations/AnimatedText";
+import { IndiaLocationsMap } from "../components/home/IndiaLocationsMap";
 
 
 export function Contact() {
+  const [selectedLocation, setSelectedLocation] = useState(LOCATIONS[0].id);
   const contactInfo = [
     {
       icon: Phone,
@@ -115,12 +118,13 @@ export function Contact() {
             ))}
           </div>
 
-          <div className="grid lg:grid-cols-2 gap-12">
-            {/* Contact Form */}
+          <div className="grid lg:grid-cols-2 gap-12 items-start">
+            {/* Left: Contact form + Visit Our Centers */}
             <motion.div
               initial={{ opacity: 0, x: -30 }}
               whileInView={{ opacity: 1, x: 0 }}
               viewport={{ once: true }}
+              className="space-y-8"
             >
               <div className="bg-card/50 backdrop-blur-sm border border-primary/20 rounded-2xl p-8">
                 <h2 className="text-3xl font-bold text-foreground mb-6">
@@ -203,28 +207,6 @@ export function Contact() {
                   </Button>
                 </form>
               </div>
-            </motion.div>
-
-            {/* Map & Locations */}
-            <motion.div
-              initial={{ opacity: 0, x: 30 }}
-              whileInView={{ opacity: 1, x: 0 }}
-              viewport={{ once: true }}
-              className="space-y-6"
-            >
-              {/* Google Maps Embed */}
-              <div className="bg-card/50 backdrop-blur-sm border border-primary/20 rounded-2xl overflow-hidden aspect-video">
-                <iframe
-                  src="https://www.google.com/maps/embed/v1/place?key=AIzaSyBFw0Qbyq9zTFTd-tUY6dZWTgaQzuU17R8&q=Jayanagar+4th+Block+Bangalore+560011&zoom=14"
-                  width="100%"
-                  height="100%"
-                  style={{ border: 0 }}
-                  allowFullScreen
-                  loading="lazy"
-                  referrerPolicy="no-referrer-when-downgrade"
-                  title="BAC Head Office Location"
-                />
-              </div>
 
               {/* Visit Our Centers */}
               <div className="bg-card/50 backdrop-blur-sm border border-primary/20 rounded-2xl p-8">
@@ -232,13 +214,20 @@ export function Contact() {
                   Visit Our Centers
                 </h3>
                 <p className="text-muted-foreground mb-6">
-                  We have 9 centers across India ready to serve you. Click on
-                  any location to learn more.
+                  We have 9 centers across India ready to serve you. Click any
+                  location below to learn more.
                 </p>
                 <div className="space-y-3">
                   {LOCATIONS.map((location) => (
                     <Link key={location.id} to={`/locations/${location.id}`}>
-                      <div className="flex items-center justify-between gap-3 p-3 bg-background/30 border border-primary/10 rounded-lg hover:border-primary/30 transition-colors mb-2">
+                      <div
+                        onMouseEnter={() => setSelectedLocation(location.id)}
+                        className={`flex items-center justify-between gap-3 p-3 border rounded-lg transition-colors mb-2 ${
+                          selectedLocation === location.id
+                            ? "bg-primary/5 border-primary/40"
+                            : "bg-background/30 border-primary/10 hover:border-primary/30"
+                        }`}
+                      >
                         <div className="flex items-center gap-3">
                           <MapPin className="text-primary" size={20} />
                           <span className="text-foreground">
@@ -255,6 +244,16 @@ export function Contact() {
                   ))}
                 </div>
               </div>
+            </motion.div>
+
+            {/* Right: Gold India map with all BAC centers */}
+            <motion.div
+              initial={{ opacity: 0, x: 30 }}
+              whileInView={{ opacity: 1, x: 0 }}
+              viewport={{ once: true }}
+              className="lg:sticky lg:top-28"
+            >
+              <IndiaLocationsMap />
             </motion.div>
           </div>
         </div>

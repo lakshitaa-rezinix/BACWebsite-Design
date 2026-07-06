@@ -4,11 +4,10 @@ import { useState } from "react";
 import { Link } from "react-router";
 import { LOCATIONS } from "../../data/constants";
 import { SplitTextReveal } from "../animations/AnimatedText";
+import { IndiaLocationsMap } from "./IndiaLocationsMap";
 
 export function LocationsMap() {
   const [selectedLocation, setSelectedLocation] = useState(LOCATIONS[0].id);
-
-  const activeLocation = LOCATIONS.find((l) => l.id === selectedLocation) ?? LOCATIONS[0];
 
   return (
     <section className="py-24 bg-gradient-to-b from-transparent to-card/30 overflow-hidden">
@@ -30,42 +29,9 @@ export function LocationsMap() {
           </motion.p>
         </div>
 
-        <div className="grid lg:grid-cols-2 gap-12">
-          {/* Google Maps Embed with border animation */}
-          <motion.div
-            initial={{ opacity: 0, x: -30 }}
-            whileInView={{ opacity: 1, x: 0 }}
-            viewport={{ once: true }}
-            transition={{ type: "spring", stiffness: 150, damping: 25 }}
-            className="relative"
-          >
-            <div className="relative aspect-square bg-card/50 backdrop-blur-sm border border-primary/20 rounded-2xl overflow-hidden">
-              {/* Animated border glow */}
-              <motion.div
-                className="absolute inset-0 rounded-2xl pointer-events-none z-10"
-                style={{
-                  boxShadow: "inset 0 0 0 1px rgba(198,167,94,0.3)",
-                }}
-                animate={{
-                  boxShadow: [
-                    "inset 0 0 0 1px rgba(198,167,94,0.1)",
-                    "inset 0 0 0 2px rgba(198,167,94,0.3)",
-                    "inset 0 0 0 1px rgba(198,167,94,0.1)",
-                  ],
-                }}
-                transition={{ duration: 3, repeat: Infinity, ease: "easeInOut" }}
-              />
-              <iframe
-                key={activeLocation.id}
-                src={activeLocation.mapEmbedUrl}
-                title={`${activeLocation.city} - BAC Location`}
-                className="w-full h-full border-0"
-                loading="lazy"
-                referrerPolicy="no-referrer-when-downgrade"
-                allowFullScreen
-              />
-            </div>
-          </motion.div>
+        <div className="grid lg:grid-cols-2 gap-12 items-start">
+          {/* Gold India map with all BAC centers */}
+          <IndiaLocationsMap className="max-w-[460px] w-full mx-auto lg:mx-0" />
 
           {/* Location Details */}
           <motion.div

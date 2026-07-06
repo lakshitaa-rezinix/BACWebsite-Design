@@ -1,5 +1,5 @@
 import { motion } from "motion/react";
-import { Award, Microscope, Shield, Diamond, Flame, CheckCircle, ArrowRight, ChevronRight } from "lucide-react";
+import { Award, Microscope, Shield, Diamond, Flame, CheckCircle, ArrowRight, ChevronRight, Gem } from "lucide-react";
 import { Link } from "react-router";
 import { Button } from "../components/ui/button";
 import { SplitTextReveal, GoldShimmerText } from "../components/animations/AnimatedText";
@@ -28,10 +28,10 @@ const SERVICES = [
   {
     num: "02",
     icon: Microscope,
-    tag: "XRF · Fire Assay",
-    title: "Testing & Assaying",
+    tag: "NABL · Gold & Silver",
+    title: "NABL Testing & Assaying (Gold & Silver)",
     description:
-      "We deploy advanced XRF (X-Ray Fluorescence) spectroscopy and traditional Fire Assay techniques to deliver precise metal purity analysis — trusted by jewellers, manufacturers, and financial institutions across India.",
+      "Our NABL-accredited laboratory deploys advanced XRF (X-Ray Fluorescence) spectroscopy and traditional Fire Assay techniques to deliver precise gold and silver purity analysis — trusted by jewellers, manufacturers, and financial institutions across India.",
     features: [
       "XRF non-destructive testing",
       "Fire Assay for precise purity",
@@ -100,6 +100,25 @@ const SERVICES = [
     image: "/images/hallmarking/set5.png",
     imageAlt: "Necklace and jhumka earrings set certified to gemological standards",
     imageCaption: "GIA-aligned certification for diamonds and precious stones",
+  },
+  {
+    num: "06",
+    icon: Gem,
+    tag: "CRM · ISO 17034",
+    title: "Reference Materials",
+    description:
+      "Certified Reference Materials for Gold & Silver — benchmark-grade standards empowering accuracy in every precious metal test. Our CRMs give laboratories a traceable, dependable baseline for calibration and quality control.",
+    features: [
+      "Gold CRMs: 375 to 999 PPT",
+      "Silver CRMs: 400 to 999 grade",
+      "Benchmark-grade traceability",
+      "Calibration & QC support",
+      "Consistent lot-to-lot accuracy",
+      "ISO 17034 aligned production",
+    ],
+    image: "/images/hallmarking/necklace5.png",
+    imageAlt: "Precision gold jewellery representing certified reference material standards",
+    imageCaption: "Benchmark-grade standards for accuracy in every precious metal test",
   },
 ];
 

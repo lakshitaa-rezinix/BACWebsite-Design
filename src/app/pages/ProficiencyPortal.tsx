@@ -28,15 +28,32 @@ interface Certificate {
 export function ProficiencyPortal() {
   const [activeTab, setActiveTab] = useState<"register" | "certificates">("register");
 
-  // Registration form state
-  const [regForm, setRegForm] = useState({
-    organizationName: "",
+  // Registration form state — mirrors BAC/PT/REG enrolment form
+  const emptyRegForm = {
+    // 1 | Laboratory Information
+    organizationName: "", // Laboratory Name
+    laboratoryAddress: "",
+    cityStateCountry: "",
+    pinCode: "",
     contactPerson: "",
+    designation: "",
+    mobile: "",
     email: "",
-    testType: "Gold Purity Test",
-    preferredDate: "",
-    notes: "",
-  });
+    // 2 | PT Program Applied For
+    goldPT: false,
+    silverPT: false,
+    // 3 | Accreditation Details
+    accreditationType: "NABL Accredited (ISO/IEC 17025:2017)",
+    accreditationNumber: "",
+    gstNumber: "",
+    // 4 | PT Participation Details
+    testMethod: "Fire Assay (cupellation) — IS 1418",
+    testMethodOther: "",
+    // 5 | Declaration
+    agreeProtocol: false,
+    agreeDataUse: false,
+  };
+  const [regForm, setRegForm] = useState(emptyRegForm);
   const [submittingReg, setSubmittingReg] = useState(false);
   const [assignedRegId, setAssignedRegId] = useState<string | null>(null);
 
@@ -48,20 +65,54 @@ export function ProficiencyPortal() {
 
   const handleRegistrationSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+
+    const ptPrograms = [
+      ...(regForm.goldPT ? ["Gold"] : []),
+      ...(regForm.silverPT ? ["Silver"] : []),
+    ];
+    if (ptPrograms.length === 0) {
+      toast.error("Please select at least one PT program (Gold or Silver).");
+      return;
+    }
+    if (regForm.testMethod === "Other" && !regForm.testMethodOther.trim()) {
+      toast.error("Please specify your test method.");
+      return;
+    }
+    if (!regForm.agreeProtocol) {
+      toast.error("Please confirm agreement to the PT scheme protocol.");
+      return;
+    }
+
     setSubmittingReg(true);
     setAssignedRegId(null);
     try {
-      const result = await api.submitRegistration(regForm);
+      const payload = {
+        organizationName: regForm.organizationName,
+        laboratoryAddress: regForm.laboratoryAddress,
+        cityStateCountry: regForm.cityStateCountry,
+        pinCode: regForm.pinCode,
+        contactPerson: regForm.contactPerson,
+        designation: regForm.designation,
+        mobile: regForm.mobile,
+        email: regForm.email,
+        ptPrograms,
+        testType: `${ptPrograms.join(" & ")} PT Program`,
+        accreditationType: regForm.accreditationType,
+        accreditationNumber: regForm.accreditationNumber,
+        gstNumber: regForm.gstNumber,
+        testMethod:
+          regForm.testMethod === "Other"
+            ? regForm.testMethodOther
+            : regForm.testMethod,
+        testMethodOther: regForm.testMethodOther,
+        agreeProtocol: regForm.agreeProtocol,
+        agreeDataUse: regForm.agreeDataUse,
+        applicationDate: new Date().toISOString(),
+      };
+      const result = await api.submitRegistration(payload);
       setAssignedRegId(result.registrationId);
       toast.success("Registration submitted successfully!");
-      setRegForm({
-        organizationName: "",
-        contactPerson: "",
-        email: "",
-        testType: "Gold Purity Test",
-        preferredDate: "",
-        notes: "",
-      });
+      setRegForm(emptyRegForm);
     } catch (err: any) {
       toast.error(err.message || "Failed to submit registration");
     } finally {
@@ -156,7 +207,7 @@ export function ProficiencyPortal() {
               key="register"
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
-              className="max-w-2xl mx-auto"
+              className="max-w-3xl mx-auto"
             >
               {/* Success message with registration ID */}
               {assignedRegId && (
@@ -178,92 +229,336 @@ export function ProficiencyPortal() {
               )}
 
               <div className="bg-card/50 backdrop-blur-sm border border-primary/20 rounded-xl p-8">
-                <h2 className="text-3xl font-bold text-foreground mb-6">
-                  New Registration
-                </h2>
-                <form onSubmit={handleRegistrationSubmit} className="space-y-6">
-                  <div>
-                    <label className="block text-foreground mb-2">
-                      Organization Name *
-                    </label>
-                    <Input
-                      required
-                      type="text"
-                      placeholder="Enter organization name"
-                      value={regForm.organizationName}
-                      onChange={(e) => setRegForm({ ...regForm, organizationName: e.target.value })}
-                      className="bg-background/50 border-primary/20 text-foreground"
-                    />
-                  </div>
+                <div className="mb-8">
+                  <span className="text-primary text-xs font-semibold uppercase tracking-wider">
+                    Form Ref: BAC/PT/REG · Rev. 01
+                  </span>
+                  <h2 className="text-3xl font-bold text-foreground mt-1">
+                    PT Program Registration
+                  </h2>
+                  <p className="text-muted-foreground mt-2">
+                    Proficiency Testing (PT) Program — Gold &amp; Silver enrolment.
+                    Fields marked <span className="text-primary">*</span> are mandatory.
+                  </p>
+                </div>
 
-                  <div>
-                    <label className="block text-foreground mb-2">
-                      Contact Person *
-                    </label>
-                    <Input
-                      required
-                      type="text"
-                      placeholder="Enter contact person name"
-                      value={regForm.contactPerson}
-                      onChange={(e) => setRegForm({ ...regForm, contactPerson: e.target.value })}
-                      className="bg-background/50 border-primary/20 text-foreground"
-                    />
-                  </div>
+                <form onSubmit={handleRegistrationSubmit} className="space-y-10">
+                  {/* 1 | Laboratory Information */}
+                  <fieldset className="space-y-5">
+                    <legend className="w-full text-sm font-bold uppercase tracking-wider text-primary border-b border-primary/20 pb-2 mb-4">
+                      1 | Laboratory Information
+                    </legend>
 
-                  <div>
-                    <label className="block text-foreground mb-2">
-                      Email Address *
-                    </label>
-                    <Input
-                      required
-                      type="email"
-                      placeholder="Enter email address"
-                      value={regForm.email}
-                      onChange={(e) => setRegForm({ ...regForm, email: e.target.value })}
-                      className="bg-background/50 border-primary/20 text-foreground"
-                    />
-                  </div>
+                    <div>
+                      <label className="block text-foreground mb-2 text-sm">
+                        Laboratory Name <span className="text-primary">*</span>
+                      </label>
+                      <Input
+                        required
+                        type="text"
+                        placeholder="Enter laboratory name"
+                        value={regForm.organizationName}
+                        onChange={(e) => setRegForm({ ...regForm, organizationName: e.target.value })}
+                        className="bg-background/50 border-primary/20 text-foreground"
+                      />
+                    </div>
 
-                  <div>
-                    <label className="block text-foreground mb-2">
-                      Test Type *
-                    </label>
-                    <select
-                      value={regForm.testType}
-                      onChange={(e) => setRegForm({ ...regForm, testType: e.target.value })}
-                      className="w-full px-4 py-2 bg-background/50 border border-primary/20 text-foreground rounded-lg outline-none focus:border-primary transition-colors"
-                    >
-                      <option>Gold Purity Test</option>
-                      <option>Silver Hallmark</option>
-                      <option>Platinum Analysis</option>
-                      <option>Diamond Grading</option>
-                    </select>
-                  </div>
+                    <div>
+                      <label className="block text-foreground mb-2 text-sm">
+                        Laboratory Address <span className="text-primary">*</span>
+                      </label>
+                      <textarea
+                        required
+                        rows={2}
+                        placeholder="Enter full laboratory address"
+                        value={regForm.laboratoryAddress}
+                        onChange={(e) => setRegForm({ ...regForm, laboratoryAddress: e.target.value })}
+                        className="w-full px-4 py-2 bg-background/50 border border-primary/20 text-foreground rounded-lg outline-none focus:border-primary transition-colors resize-none"
+                      />
+                    </div>
 
-                  <div>
-                    <label className="block text-foreground mb-2">
-                      Preferred Date
-                    </label>
-                    <Input
-                      type="date"
-                      value={regForm.preferredDate}
-                      onChange={(e) => setRegForm({ ...regForm, preferredDate: e.target.value })}
-                      className="bg-background/50 border-primary/20 text-foreground"
-                    />
-                  </div>
+                    <div className="grid sm:grid-cols-2 gap-5">
+                      <div>
+                        <label className="block text-foreground mb-2 text-sm">
+                          City / State / Country <span className="text-primary">*</span>
+                        </label>
+                        <Input
+                          required
+                          type="text"
+                          placeholder="e.g. Mumbai, Maharashtra, India"
+                          value={regForm.cityStateCountry}
+                          onChange={(e) => setRegForm({ ...regForm, cityStateCountry: e.target.value })}
+                          className="bg-background/50 border-primary/20 text-foreground"
+                        />
+                      </div>
+                      <div>
+                        <label className="block text-foreground mb-2 text-sm">
+                          PIN Code
+                        </label>
+                        <Input
+                          type="text"
+                          placeholder="Enter PIN code"
+                          value={regForm.pinCode}
+                          onChange={(e) => setRegForm({ ...regForm, pinCode: e.target.value })}
+                          className="bg-background/50 border-primary/20 text-foreground"
+                        />
+                      </div>
+                    </div>
 
-                  <div>
-                    <label className="block text-foreground mb-2">
-                      Additional Notes
+                    <div className="grid sm:grid-cols-2 gap-5">
+                      <div>
+                        <label className="block text-foreground mb-2 text-sm">
+                          Contact Person Name
+                        </label>
+                        <Input
+                          type="text"
+                          placeholder="Enter contact person name"
+                          value={regForm.contactPerson}
+                          onChange={(e) => setRegForm({ ...regForm, contactPerson: e.target.value })}
+                          className="bg-background/50 border-primary/20 text-foreground"
+                        />
+                      </div>
+                      <div>
+                        <label className="block text-foreground mb-2 text-sm">
+                          Designation <span className="text-primary">*</span>
+                        </label>
+                        <Input
+                          required
+                          type="text"
+                          placeholder="e.g. Quality Manager"
+                          value={regForm.designation}
+                          onChange={(e) => setRegForm({ ...regForm, designation: e.target.value })}
+                          className="bg-background/50 border-primary/20 text-foreground"
+                        />
+                      </div>
+                    </div>
+
+                    <div className="grid sm:grid-cols-2 gap-5">
+                      <div>
+                        <label className="block text-foreground mb-2 text-sm">
+                          Mobile Number <span className="text-primary">*</span>
+                        </label>
+                        <Input
+                          required
+                          type="tel"
+                          placeholder="+91 98765 43210"
+                          value={regForm.mobile}
+                          onChange={(e) => setRegForm({ ...regForm, mobile: e.target.value })}
+                          className="bg-background/50 border-primary/20 text-foreground"
+                        />
+                      </div>
+                      <div>
+                        <label className="block text-foreground mb-2 text-sm">
+                          Email ID <span className="text-primary">*</span>
+                        </label>
+                        <Input
+                          required
+                          type="email"
+                          placeholder="Enter email address"
+                          value={regForm.email}
+                          onChange={(e) => setRegForm({ ...regForm, email: e.target.value })}
+                          className="bg-background/50 border-primary/20 text-foreground"
+                        />
+                      </div>
+                    </div>
+                  </fieldset>
+
+                  {/* 2 | PT Program Applied For */}
+                  <fieldset className="space-y-4">
+                    <legend className="w-full text-sm font-bold uppercase tracking-wider text-primary border-b border-primary/20 pb-2 mb-4">
+                      2 | PT Program Applied For <span className="text-primary">*</span>
+                    </legend>
+
+                    <div className="grid sm:grid-cols-2 gap-4">
+                      <label
+                        className={`flex items-start gap-3 p-4 rounded-lg border cursor-pointer transition-all ${
+                          regForm.goldPT
+                            ? "border-primary bg-primary/10"
+                            : "border-primary/20 bg-background/30 hover:border-primary/40"
+                        }`}
+                      >
+                        <input
+                          type="checkbox"
+                          checked={regForm.goldPT}
+                          onChange={(e) => setRegForm({ ...regForm, goldPT: e.target.checked })}
+                          className="mt-1 accent-primary"
+                        />
+                        <span>
+                          <span className="block font-semibold text-foreground">GOLD PT Program</span>
+                          <span className="block text-muted-foreground text-sm">
+                            Proficiency testing for gold purity / assay
+                          </span>
+                        </span>
+                      </label>
+
+                      <label
+                        className={`flex items-start gap-3 p-4 rounded-lg border cursor-pointer transition-all ${
+                          regForm.silverPT
+                            ? "border-primary bg-primary/10"
+                            : "border-primary/20 bg-background/30 hover:border-primary/40"
+                        }`}
+                      >
+                        <input
+                          type="checkbox"
+                          checked={regForm.silverPT}
+                          onChange={(e) => setRegForm({ ...regForm, silverPT: e.target.checked })}
+                          className="mt-1 accent-primary"
+                        />
+                        <span>
+                          <span className="block font-semibold text-foreground">SILVER PT Program</span>
+                          <span className="block text-muted-foreground text-sm">
+                            Proficiency testing for silver purity / assay
+                          </span>
+                        </span>
+                      </label>
+                    </div>
+                  </fieldset>
+
+                  {/* 3 | Accreditation Details */}
+                  <fieldset className="space-y-5">
+                    <legend className="w-full text-sm font-bold uppercase tracking-wider text-primary border-b border-primary/20 pb-2 mb-4">
+                      3 | Accreditation Details
+                    </legend>
+
+                    <div className="grid sm:grid-cols-2 gap-3">
+                      {[
+                        "NABL Accredited (ISO/IEC 17025:2017)",
+                        "BIS Recognized",
+                        "Internal Laboratory",
+                        "Not Accredited",
+                      ].map((option) => (
+                        <label
+                          key={option}
+                          className={`flex items-center gap-3 p-3 rounded-lg border cursor-pointer transition-all text-sm ${
+                            regForm.accreditationType === option
+                              ? "border-primary bg-primary/10 text-foreground"
+                              : "border-primary/20 bg-background/30 text-muted-foreground hover:border-primary/40"
+                          }`}
+                        >
+                          <input
+                            type="radio"
+                            name="accreditationType"
+                            value={option}
+                            checked={regForm.accreditationType === option}
+                            onChange={(e) => setRegForm({ ...regForm, accreditationType: e.target.value })}
+                            className="accent-primary"
+                          />
+                          {option}
+                        </label>
+                      ))}
+                    </div>
+
+                    <div className="grid sm:grid-cols-2 gap-5">
+                      <div>
+                        <label className="block text-foreground mb-2 text-sm">
+                          NABL / BIS Number (if applicable)
+                        </label>
+                        <Input
+                          type="text"
+                          placeholder="Enter accreditation number"
+                          value={regForm.accreditationNumber}
+                          onChange={(e) => setRegForm({ ...regForm, accreditationNumber: e.target.value })}
+                          className="bg-background/50 border-primary/20 text-foreground"
+                        />
+                      </div>
+                      <div>
+                        <label className="block text-foreground mb-2 text-sm">
+                          GST Number <span className="text-primary">*</span>
+                        </label>
+                        <Input
+                          required
+                          type="text"
+                          placeholder="Enter GST number (or NA)"
+                          value={regForm.gstNumber}
+                          onChange={(e) => setRegForm({ ...regForm, gstNumber: e.target.value })}
+                          className="bg-background/50 border-primary/20 text-foreground"
+                        />
+                      </div>
+                    </div>
+                  </fieldset>
+
+                  {/* 4 | PT Participation Details */}
+                  <fieldset className="space-y-4">
+                    <legend className="w-full text-sm font-bold uppercase tracking-wider text-primary border-b border-primary/20 pb-2 mb-4">
+                      4 | PT Participation Details
+                    </legend>
+
+                    <div>
+                      <label className="block text-foreground mb-3 text-sm">
+                        Test Method Used in Your Laboratory <span className="text-primary">*</span>
+                      </label>
+                      <div className="space-y-3">
+                        {[
+                          "Fire Assay (cupellation) — IS 1418",
+                          "Other",
+                        ].map((option) => (
+                          <label
+                            key={option}
+                            className="flex items-center gap-3 text-foreground/90 cursor-pointer text-sm"
+                          >
+                            <input
+                              type="radio"
+                              name="testMethod"
+                              value={option}
+                              checked={regForm.testMethod === option}
+                              onChange={(e) => setRegForm({ ...regForm, testMethod: e.target.value })}
+                              className="accent-primary"
+                            />
+                            {option === "Other" ? "Other (please specify below)" : option}
+                          </label>
+                        ))}
+                      </div>
+
+                      {regForm.testMethod === "Other" && (
+                        <Input
+                          type="text"
+                          placeholder="Specify your test method"
+                          value={regForm.testMethodOther}
+                          onChange={(e) => setRegForm({ ...regForm, testMethodOther: e.target.value })}
+                          className="mt-3 bg-background/50 border-primary/20 text-foreground"
+                        />
+                      )}
+                    </div>
+                  </fieldset>
+
+                  {/* 5 | Declaration */}
+                  <fieldset className="space-y-4">
+                    <legend className="w-full text-sm font-bold uppercase tracking-wider text-primary border-b border-primary/20 pb-2 mb-4">
+                      5 | Declaration
+                    </legend>
+
+                    <p className="text-muted-foreground text-sm">
+                      I/We hereby apply to participate in the Proficiency Testing Program of
+                      Bombay Assay Company. I/We confirm that the information provided is true
+                      and correct, agree to abide by the PT scheme protocol and confidentiality
+                      terms, and undertake to remit the applicable fee.
+                    </p>
+
+                    <label className="flex items-start gap-3 cursor-pointer text-sm">
+                      <input
+                        type="checkbox"
+                        checked={regForm.agreeProtocol}
+                        onChange={(e) => setRegForm({ ...regForm, agreeProtocol: e.target.checked })}
+                        className="mt-1 accent-primary"
+                      />
+                      <span className="text-foreground/90">
+                        I confirm our laboratory agrees to follow PT instructions, maintain
+                        confidentiality, and submit results on time. <span className="text-primary">*</span>
+                      </span>
                     </label>
-                    <textarea
-                      rows={4}
-                      placeholder="Any special requirements or notes..."
-                      value={regForm.notes}
-                      onChange={(e) => setRegForm({ ...regForm, notes: e.target.value })}
-                      className="w-full px-4 py-2 bg-background/50 border border-primary/20 text-foreground rounded-lg outline-none focus:border-primary transition-colors resize-none"
-                    />
-                  </div>
+
+                    <label className="flex items-start gap-3 cursor-pointer text-sm">
+                      <input
+                        type="checkbox"
+                        checked={regForm.agreeDataUse}
+                        onChange={(e) => setRegForm({ ...regForm, agreeDataUse: e.target.checked })}
+                        className="mt-1 accent-primary"
+                      />
+                      <span className="text-foreground/90">
+                        I agree that anonymized data may be used for statistical evaluation and reporting.
+                      </span>
+                    </label>
+                  </fieldset>
 
                   <Button
                     type="submit"

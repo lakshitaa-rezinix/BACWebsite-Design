@@ -8,9 +8,23 @@ interface Registration {
   _id: string;
   registrationId: string;
   organizationName: string;
-  contactPerson: string;
+  laboratoryAddress?: string;
+  cityStateCountry?: string;
+  pinCode?: string;
+  contactPerson?: string;
+  designation?: string;
+  mobile?: string;
   email: string;
+  ptPrograms?: string[];
   testType: string;
+  accreditationType?: string;
+  accreditationNumber?: string;
+  gstNumber?: string;
+  testMethod?: string;
+  testMethodOther?: string;
+  agreeProtocol?: boolean;
+  agreeDataUse?: boolean;
+  applicationDate?: string;
   preferredDate?: string;
   notes?: string;
   status: string;
@@ -217,20 +231,81 @@ export function ProficiencyRegistrations() {
                 <p className="text-primary font-mono font-medium">{viewReg.registrationId}</p>
               </div>
               <div>
-                <label className="text-xs text-muted-foreground uppercase tracking-wider">Organization</label>
+                <label className="text-xs text-muted-foreground uppercase tracking-wider">Laboratory Name</label>
                 <p className="text-foreground font-medium">{viewReg.organizationName}</p>
               </div>
-              <div>
-                <label className="text-xs text-muted-foreground uppercase tracking-wider">Contact Person</label>
-                <p className="text-foreground">{viewReg.contactPerson}</p>
+              {viewReg.laboratoryAddress && (
+                <div>
+                  <label className="text-xs text-muted-foreground uppercase tracking-wider">Laboratory Address</label>
+                  <p className="text-foreground text-sm">
+                    {viewReg.laboratoryAddress}
+                    {viewReg.cityStateCountry ? `, ${viewReg.cityStateCountry}` : ""}
+                    {viewReg.pinCode ? ` - ${viewReg.pinCode}` : ""}
+                  </p>
+                </div>
+              )}
+              <div className="grid grid-cols-2 gap-4">
+                {viewReg.contactPerson && (
+                  <div>
+                    <label className="text-xs text-muted-foreground uppercase tracking-wider">Contact Person</label>
+                    <p className="text-foreground">{viewReg.contactPerson}</p>
+                  </div>
+                )}
+                {viewReg.designation && (
+                  <div>
+                    <label className="text-xs text-muted-foreground uppercase tracking-wider">Designation</label>
+                    <p className="text-foreground">{viewReg.designation}</p>
+                  </div>
+                )}
+              </div>
+              <div className="grid grid-cols-2 gap-4">
+                <div>
+                  <label className="text-xs text-muted-foreground uppercase tracking-wider">Email</label>
+                  <p className="text-foreground break-all">{viewReg.email}</p>
+                </div>
+                {viewReg.mobile && (
+                  <div>
+                    <label className="text-xs text-muted-foreground uppercase tracking-wider">Mobile</label>
+                    <p className="text-foreground">{viewReg.mobile}</p>
+                  </div>
+                )}
               </div>
               <div>
-                <label className="text-xs text-muted-foreground uppercase tracking-wider">Email</label>
-                <p className="text-foreground">{viewReg.email}</p>
+                <label className="text-xs text-muted-foreground uppercase tracking-wider">PT Program</label>
+                <p className="text-foreground">
+                  {viewReg.ptPrograms && viewReg.ptPrograms.length > 0
+                    ? viewReg.ptPrograms.join(" & ")
+                    : viewReg.testType}
+                </p>
               </div>
+              {(viewReg.accreditationType || viewReg.accreditationNumber) && (
+                <div>
+                  <label className="text-xs text-muted-foreground uppercase tracking-wider">Accreditation</label>
+                  <p className="text-foreground text-sm">
+                    {viewReg.accreditationType}
+                    {viewReg.accreditationNumber ? ` — ${viewReg.accreditationNumber}` : ""}
+                  </p>
+                </div>
+              )}
+              {viewReg.gstNumber && (
+                <div>
+                  <label className="text-xs text-muted-foreground uppercase tracking-wider">GST Number</label>
+                  <p className="text-foreground">{viewReg.gstNumber}</p>
+                </div>
+              )}
+              {viewReg.testMethod && (
+                <div>
+                  <label className="text-xs text-muted-foreground uppercase tracking-wider">Test Method</label>
+                  <p className="text-foreground text-sm">{viewReg.testMethod}</p>
+                </div>
+              )}
               <div>
-                <label className="text-xs text-muted-foreground uppercase tracking-wider">Test Type</label>
-                <p className="text-foreground">{viewReg.testType}</p>
+                <label className="text-xs text-muted-foreground uppercase tracking-wider">Declaration</label>
+                <p className="text-foreground text-sm">
+                  Protocol &amp; confidentiality: {viewReg.agreeProtocol ? "Agreed" : "Not agreed"}
+                  <br />
+                  Anonymized data use: {viewReg.agreeDataUse ? "Agreed" : "Not agreed"}
+                </p>
               </div>
               {viewReg.preferredDate && (
                 <div>

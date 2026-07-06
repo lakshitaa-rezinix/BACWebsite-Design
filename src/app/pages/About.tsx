@@ -1,5 +1,5 @@
 import { motion } from "motion/react";
-import { Award, Target, Eye, Users, Building2, TrendingUp, Compass, FileText, Download } from "lucide-react";
+import { Award, Target, Eye, Users, Building2, TrendingUp, Compass } from "lucide-react";
 import { COMPANY, MILESTONES } from "../data/constants";
 import { AWARD_IMAGES } from "../data/images";
 import { SplitTextReveal, GoldShimmerText } from "../components/animations/AnimatedText";
@@ -33,12 +33,32 @@ export function About() {
     },
   ];
 
-  const bisCertificates = [
-    { name: "Anupam Das", file: "/certificates/Anupam Das (1).pdf" },
-    { name: "Ayan Dutta", file: "/certificates/Ayan Dutta (1).pdf" },
-    { name: "Ayan Dutta (Advanced)", file: "/certificates/Ayan Dutta.pdf" },
-    { name: "Ishwar Jha", file: "/certificates/Ishwar Jha.pdf" },
-    { name: "Raju Das", file: "/certificates/Raju Das.pdf" },
+  const accreditationStandards = [
+    {
+      code: "ISO/IEC 17025",
+      title: "Testing & Calibration Laboratories",
+      description: "General requirements for the competence of testing and calibration laboratories.",
+    },
+    {
+      code: "IS 1418",
+      title: "Gold Assaying — Fire Assay",
+      description: "Indian Standard for gold and gold alloys purity determination by cupellation.",
+    },
+    {
+      code: "IS 15820",
+      title: "Silver Hallmarking",
+      description: "Indian Standard specification for hallmarking of silver jewellery and artefacts.",
+    },
+    {
+      code: "ISO/IEC 17043",
+      title: "Proficiency Testing Providers",
+      description: "Conformity assessment — general requirements for proficiency testing.",
+    },
+    {
+      code: "ISO 17034",
+      title: "Reference Material Producers",
+      description: "General requirements for the competence of reference material producers.",
+    },
   ];
 
   return (
@@ -249,7 +269,7 @@ export function About() {
         </div>
       </section>
 
-      {/* BIS Certified Staff */}
+      {/* Certifications & Standards */}
       <section className="py-20 bg-gradient-to-b from-transparent to-card/30">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <motion.div
@@ -259,43 +279,39 @@ export function About() {
             className="text-center mb-12"
           >
             <h2 className="text-4xl font-bold text-foreground mb-4">
-              BIS Certified Staff
+              Certifications & Standards
             </h2>
             <p className="text-muted-foreground text-lg">
-              Our certified professionals across 9 centers
+              Certified by standards, not individuals — every center operates to the same national and international benchmarks.
             </p>
           </motion.div>
 
           <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {bisCertificates.map((cert, index) => (
+            {accreditationStandards.map((standard, index) => (
               <motion.div
-                key={cert.name}
+                key={standard.code}
                 initial={{ opacity: 0, y: 20 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
                 transition={{ delay: index * 0.1 }}
                 whileHover={{ y: -5 }}
-                className="group overflow-hidden rounded-xl border border-primary/20 hover:border-primary/50 transition-all"
+                className="group p-6 rounded-xl border border-primary/20 bg-card/50 hover:border-primary/50 transition-all"
               >
-                <div className="aspect-video bg-card/50 flex flex-col items-center justify-center gap-3">
-                  <div className="p-4 bg-primary/10 rounded-xl group-hover:bg-primary/20 transition-colors">
-                    <FileText className="text-primary" size={40} />
+                <div className="flex items-start gap-4">
+                  <div className="p-3 bg-primary/10 rounded-xl group-hover:bg-primary/20 transition-colors shrink-0">
+                    <Award className="text-primary" size={28} />
                   </div>
-                  <h3 className="text-lg font-semibold text-foreground">
-                    {cert.name}
-                  </h3>
-                  <span className="text-xs text-primary/60 uppercase tracking-wider">BIS Certificate</span>
-                </div>
-                <div className="p-4 bg-card/50 flex items-center justify-center">
-                  <a
-                    href={cert.file}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="flex items-center gap-2 text-sm text-primary hover:text-primary/80 transition-colors font-medium"
-                  >
-                    <Download size={16} />
-                    View Certificate
-                  </a>
+                  <div className="min-w-0">
+                    <h3 className="text-xl font-bold text-foreground leading-tight">
+                      {standard.code}
+                    </h3>
+                    <span className="text-xs text-primary/70 uppercase tracking-wider">
+                      {standard.title}
+                    </span>
+                    <p className="text-muted-foreground text-sm mt-3">
+                      {standard.description}
+                    </p>
+                  </div>
                 </div>
               </motion.div>
             ))}

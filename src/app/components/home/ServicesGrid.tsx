@@ -15,9 +15,9 @@ const SERVICES = [
   {
     num: "02",
     icon: Microscope,
-    title: "Testing & Assaying",
-    description: "Advanced XRF and fire assay testing deliver accurate metal purity analysis for jewellers, manufacturers, and institutions.",
-    tag: "XRF · Fire Assay",
+    title: "NABL Testing & Assaying",
+    description: "NABL-accredited XRF and fire assay testing deliver accurate gold and silver purity analysis for jewellers, manufacturers, and institutions.",
+    tag: "NABL · Gold & Silver",
   },
   {
     num: "03",

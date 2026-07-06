@@ -8,14 +8,36 @@ const Counter = mongoose.models.Counter || mongoose.model("Counter", counterSche
 
 const registrationSchema = new mongoose.Schema({
   registrationId: { type: String, unique: true },
-  organizationName: { type: String, required: true },
-  contactPerson: { type: String, required: true },
+
+  // 1 | Laboratory Information
+  organizationName: { type: String, required: true }, // Laboratory Name
+  laboratoryAddress: { type: String },
+  cityStateCountry: { type: String },
+  pinCode: { type: String },
+  contactPerson: { type: String },
+  designation: { type: String },
+  mobile: { type: String },
   email: { type: String, required: true },
-  testType: {
-    type: String,
-    enum: ["Gold Purity Test", "Silver Hallmark", "Platinum Analysis", "Diamond Grading"],
-    required: true,
-  },
+
+  // 2 | PT Program Applied For
+  ptPrograms: { type: [String], default: [] }, // e.g. ["Gold", "Silver"]
+  // Human-readable summary kept for the admin table / certificate mapping
+  testType: { type: String },
+
+  // 3 | Accreditation Details
+  accreditationType: { type: String }, // NABL / BIS / Internal / Not Accredited
+  accreditationNumber: { type: String },
+  gstNumber: { type: String },
+
+  // 4 | PT Participation Details
+  testMethod: { type: String }, // Fire Assay (cupellation) — IS 1418 / Other
+  testMethodOther: { type: String },
+
+  // 5 | Declaration
+  agreeProtocol: { type: Boolean, default: false },
+  agreeDataUse: { type: Boolean, default: false },
+
+  applicationDate: { type: Date },
   preferredDate: { type: Date },
   notes: { type: String },
   status: {

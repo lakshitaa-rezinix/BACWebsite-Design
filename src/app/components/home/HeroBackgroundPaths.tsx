@@ -299,6 +299,32 @@ export function HeroBackgroundPaths() {
               </div>
             </div>
           </motion.div>
+
+          {/* Reference Materials highlight */}
+          <motion.div
+            initial={{ opacity: 0, y: 30 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 1.5, duration: 0.6 }}
+            className="mt-4 max-w-2xl mx-auto bg-card/60 backdrop-blur-xl border border-primary/25 rounded-2xl px-6 sm:px-8 py-4"
+          >
+            <h2 className="text-sm sm:text-base font-bold text-foreground">
+              Certified Reference Materials for Gold &amp; Silver
+            </h2>
+            <p className="text-muted-foreground text-xs sm:text-sm mt-1">
+              Benchmark-grade standards empowering accuracy in every precious metal test
+            </p>
+            <div className="flex flex-wrap items-center justify-center gap-x-8 gap-y-1.5 mt-3">
+              <div className="flex items-center gap-2 text-sm">
+                <span className="text-primary font-semibold">Gold:</span>
+                <span className="text-foreground/80">375 to 999 PPT</span>
+              </div>
+              <div className="w-px h-4 bg-primary/20 hidden sm:block" />
+              <div className="flex items-center gap-2 text-sm">
+                <span className="text-primary font-semibold">Silver:</span>
+                <span className="text-foreground/80">400 to 999 grade</span>
+              </div>
+            </div>
+          </motion.div>
         </motion.div>
       </div>
 

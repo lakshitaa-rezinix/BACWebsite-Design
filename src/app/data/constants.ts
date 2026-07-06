@@ -208,8 +208,8 @@ export const SERVICES = [
   },
   {
     id: "testing",
-    title: "Testing & Assaying",
-    shortDesc: "XRF and Fire Assay methods for precise precious metal analysis",
+    title: "NABL Testing & Assaying",
+    shortDesc: "NABL-accredited XRF and Fire Assay methods for precise gold & silver analysis",
     icon: "FlaskConical",
   },
   {
@@ -228,6 +228,12 @@ export const SERVICES = [
     id: "diamond-certification",
     title: "Diamond Certification",
     shortDesc: "4C grading, authenticity verification, and laser inscription",
+    icon: "Gem",
+  },
+  {
+    id: "reference-materials",
+    title: "Reference Materials",
+    shortDesc: "Certified Reference Materials for Gold (375-999 PPT) & Silver (400-999 grade)",
     icon: "Gem",
   },
 ];
