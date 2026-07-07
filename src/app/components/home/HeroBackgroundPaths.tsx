@@ -2,7 +2,7 @@ import { motion, useMotionValue, animate as motionAnimate } from "motion/react";
 import { Link } from "react-router";
 import { ChevronRight } from "lucide-react";
 import { Button } from "../ui/button";
-import { useState, useEffect, type CSSProperties } from "react";
+import { useState, useEffect, Fragment, type CSSProperties } from "react";
 import { TypewriterText } from "../animations/AnimatedText";
 import { MagneticButton } from "../animations/MagneticButton";
 
@@ -115,7 +115,7 @@ const GOLD_WORDS = new Set(["Quality", "Assurance", "and", "Hallmarking"]);
 
 export function HeroBackgroundPaths() {
   return (
-    <section className="relative h-[calc(100vh-5rem)] w-full flex flex-col items-center justify-center overflow-hidden bg-background">
+    <section className="relative min-h-[calc(100vh-5rem)] w-full flex flex-col justify-center overflow-hidden bg-background py-12 sm:py-8">
       {/* Animated Gold SVG Paths */}
       <div className="absolute inset-0">
         <FloatingPaths position={1} />
@@ -171,37 +171,40 @@ export function HeroBackgroundPaths() {
       />
 
       {/* Main Content */}
-      <div className="relative z-10 max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 text-center pt-4 pb-10">
+      <div className="relative z-10 w-full max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 text-center pt-4 pb-10">
         <motion.div
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ duration: 1.2 }}
         >
           {/* Animated per-letter heading */}
-          <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold mb-4 tracking-tight leading-[1.25]">
+          <h1 className="text-[1.7rem] sm:text-4xl md:text-5xl lg:text-6xl font-bold mb-4 tracking-tight leading-[1.2] break-words">
             {TITLE_WORDS.map((word, wordIndex) => (
-              <span key={wordIndex} className="inline-block mr-[0.25em] last:mr-0">
-                {word.split("").map((letter, letterIndex) => (
-                  <motion.span
-                    key={`${wordIndex}-${letterIndex}`}
-                    initial={{ y: 80, opacity: 0 }}
-                    animate={{ y: 0, opacity: 1 }}
-                    transition={{
-                      delay: wordIndex * 0.08 + letterIndex * 0.025,
-                      type: "spring",
-                      stiffness: 160,
-                      damping: 22,
-                    }}
-                    className={
-                      GOLD_WORDS.has(word)
-                        ? "inline-block text-transparent bg-clip-text bg-gradient-to-r from-primary to-primary/70"
-                        : "inline-block text-transparent bg-clip-text bg-gradient-to-b from-foreground to-foreground/80"
-                    }
-                  >
-                    {letter}
-                  </motion.span>
-                ))}
-              </span>
+              <Fragment key={wordIndex}>
+                <span className="inline-block">
+                  {word.split("").map((letter, letterIndex) => (
+                    <motion.span
+                      key={`${wordIndex}-${letterIndex}`}
+                      initial={{ y: 80, opacity: 0 }}
+                      animate={{ y: 0, opacity: 1 }}
+                      transition={{
+                        delay: wordIndex * 0.08 + letterIndex * 0.025,
+                        type: "spring",
+                        stiffness: 160,
+                        damping: 22,
+                      }}
+                      className={
+                        GOLD_WORDS.has(word)
+                          ? "inline-block text-transparent bg-clip-text bg-gradient-to-r from-primary to-primary/70"
+                          : "inline-block text-transparent bg-clip-text bg-gradient-to-b from-foreground to-foreground/80"
+                      }
+                    >
+                      {letter}
+                    </motion.span>
+                  ))}
+                </span>
+                {wordIndex < TITLE_WORDS.length - 1 ? " " : null}
+              </Fragment>
             ))}
           </h1>
 
@@ -254,7 +257,7 @@ export function HeroBackgroundPaths() {
             initial={{ opacity: 0, y: 30 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 1.3, duration: 0.6 }}
-            className="relative inline-flex bg-card/60 backdrop-blur-xl border border-primary/25 rounded-2xl px-8 py-5 overflow-hidden"
+            className="relative flex w-full max-w-2xl mx-auto bg-card/60 backdrop-blur-xl border border-primary/25 rounded-2xl px-4 sm:px-8 py-4 sm:py-5 overflow-hidden"
           >
             {/* Shimmer */}
             <motion.div
@@ -266,33 +269,33 @@ export function HeroBackgroundPaths() {
               animate={{ backgroundPosition: ["200% 0", "-200% 0"] }}
               transition={{ duration: 3.5, repeat: Infinity, ease: "linear", repeatDelay: 4 }}
             />
-            <div className="flex flex-wrap items-center justify-center gap-6 sm:gap-8">
+            <div className="flex flex-wrap items-center justify-center gap-x-5 gap-y-3 sm:gap-8 w-full">
               <div className="text-center">
-                <div className="text-2xl sm:text-3xl font-bold text-primary tracking-tight">
+                <div className="text-lg sm:text-2xl md:text-3xl font-bold text-primary tracking-tight">
                   <AnimatedCounter value={10} suffix="M+" />
                 </div>
                 <div className="text-muted-foreground text-xs mt-1">Annual Capacity</div>
               </div>
               <div className="w-px h-10 bg-primary/20 hidden sm:block" />
               <div className="text-center">
-                <div className="text-2xl sm:text-3xl font-bold text-primary tracking-tight">BIS & NABL</div>
+                <div className="text-lg sm:text-2xl md:text-3xl font-bold text-primary tracking-tight">BIS & NABL</div>
                 <div className="text-muted-foreground text-xs mt-1">Accredited</div>
               </div>
               <div className="w-px h-10 bg-primary/20 hidden sm:block" />
               <div className="text-center">
-                <div className="text-2xl sm:text-3xl font-bold text-primary tracking-tight">ISO</div>
+                <div className="text-lg sm:text-2xl md:text-3xl font-bold text-primary tracking-tight">ISO</div>
                 <div className="text-muted-foreground text-xs mt-1">Certified</div>
               </div>
               <div className="w-px h-10 bg-primary/20 hidden sm:block" />
               <div className="text-center">
-                <div className="text-2xl sm:text-3xl font-bold text-primary tracking-tight">
+                <div className="text-lg sm:text-2xl md:text-3xl font-bold text-primary tracking-tight">
                   <AnimatedCounter value={9} />
                 </div>
                 <div className="text-muted-foreground text-xs mt-1">Centers Across India</div>
               </div>
               <div className="w-px h-10 bg-primary/20 hidden sm:block" />
               <div className="text-center">
-                <div className="text-2xl sm:text-3xl font-bold text-primary tracking-tight">
+                <div className="text-lg sm:text-2xl md:text-3xl font-bold text-primary tracking-tight">
                   <AnimatedCounter value={5} suffix="+" />
                 </div>
                 <div className="text-muted-foreground text-xs mt-1">Years</div>
@@ -305,7 +308,7 @@ export function HeroBackgroundPaths() {
             initial={{ opacity: 0, y: 30 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 1.5, duration: 0.6 }}
-            className="mt-4 max-w-2xl mx-auto bg-card/60 backdrop-blur-xl border border-primary/25 rounded-2xl px-6 sm:px-8 py-4"
+            className="mt-4 w-full max-w-2xl mx-auto bg-card/60 backdrop-blur-xl border border-primary/25 rounded-2xl px-4 sm:px-8 py-4"
           >
             <h2 className="text-sm sm:text-base font-bold text-foreground">
               Certified Reference Materials for Gold &amp; Silver
