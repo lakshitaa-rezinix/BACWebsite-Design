@@ -1,20 +1,32 @@
 import { motion } from "motion/react";
-import { Calendar, User, ArrowRight } from "lucide-react";
+import { Calendar, ArrowRight, Loader2 } from "lucide-react";
 import { Link } from "react-router";
-import { blogPosts } from "../data/blog-posts";
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { api } from "../lib/api";
+import type { BlogPost as BlogPostType } from "../data/blog-posts";
 
 export function Blog() {
+  const [posts, setPosts] = useState<BlogPostType[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [activeCategory, setActiveCategory] = useState("All");
+
+  useEffect(() => {
+    api
+      .getBlogPosts()
+      .then(setPosts)
+      .catch(() => setPosts([]))
+      .finally(() => setLoading(false));
+  }, []);
+
   const allCategories = [
     "All",
-    ...Array.from(new Set(blogPosts.map((p) => p.category))),
+    ...Array.from(new Set(posts.map((p) => p.category))),
   ];
-  const [activeCategory, setActiveCategory] = useState("All");
 
   const filtered =
     activeCategory === "All"
-      ? blogPosts
-      : blogPosts.filter((p) => p.category === activeCategory);
+      ? posts
+      : posts.filter((p) => p.category === activeCategory);
 
   return (
     <div className="min-h-screen">
@@ -73,6 +85,16 @@ export function Blog() {
       {/* Blog Grid */}
       <section className="py-12">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          {loading ? (
+            <div className="flex items-center justify-center py-20">
+              <Loader2 className="animate-spin text-primary" size={32} />
+              <span className="ml-3 text-muted-foreground">Loading posts...</span>
+            </div>
+          ) : filtered.length === 0 ? (
+            <p className="text-muted-foreground text-center py-20">
+              No posts published yet. Check back soon.
+            </p>
+          ) : (
           <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
             {filtered.map((post, index) => (
               <motion.div
@@ -123,6 +145,7 @@ export function Blog() {
               </motion.div>
             ))}
           </div>
+          )}
         </div>
       </section>
     </div>

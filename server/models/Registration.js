@@ -48,17 +48,19 @@ const registrationSchema = new mongoose.Schema({
   createdAt: { type: Date, default: Date.now },
 });
 
-registrationSchema.pre("save", async function (next) {
+// Mongoose 9 calls async hooks with no arguments and awaits the returned
+// promise. Taking a `next` parameter here threw "next is not a function" on
+// every save, which made Registration.create() fail outright.
+registrationSchema.pre("save", async function () {
   if (!this.registrationId) {
     const year = new Date().getFullYear();
     const counter = await Counter.findByIdAndUpdate(
       "registrationId",
       { $inc: { seq: 1 } },
-      { upsert: true, new: true }
+      { upsert: true, returnDocument: "after" }
     );
     this.registrationId = `PT-${year}-${String(counter.seq).padStart(3, "0")}`;
   }
-  next();
 });
 
 module.exports = mongoose.model("Registration", registrationSchema);

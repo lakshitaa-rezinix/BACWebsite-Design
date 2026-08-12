@@ -57,8 +57,12 @@ export function JobApplications() {
     }
   };
 
-  const handleDownloadResume = (app: Application) => {
-    window.open(api.getResumeUrl(app._id), "_blank");
+  const handleDownloadResume = async (app: Application) => {
+    try {
+      await api.downloadResume(app._id, app.name);
+    } catch (err: any) {
+      toast.error(err.message || "Failed to download resume");
+    }
   };
 
   if (loading) {

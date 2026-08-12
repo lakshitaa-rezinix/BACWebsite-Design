@@ -1,6 +1,7 @@
 const express = require("express");
 const Registration = require("../models/Registration");
 const auth = require("../middleware/auth");
+const validateId = require("../middleware/validateId");
 const router = express.Router();
 
 // Public: submit registration
@@ -27,7 +28,7 @@ router.get("/", auth, async (req, res) => {
 });
 
 // Admin: update registration status
-router.put("/:id", auth, async (req, res) => {
+router.put("/:id", auth, validateId, async (req, res) => {
   try {
     const registration = await Registration.findByIdAndUpdate(
       req.params.id,

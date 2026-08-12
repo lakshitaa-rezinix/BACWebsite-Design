@@ -21,17 +21,19 @@ const certificateSchema = new mongoose.Schema({
   createdAt: { type: Date, default: Date.now },
 });
 
-certificateSchema.pre("save", async function (next) {
+// Mongoose 9 calls async hooks with no arguments and awaits the returned
+// promise. Taking a `next` parameter here threw "next is not a function" on
+// every save, which made Certificate.create() fail outright.
+certificateSchema.pre("save", async function () {
   if (!this.certificateId) {
     const year = new Date().getFullYear();
     const counter = await Counter.findByIdAndUpdate(
       "certificateId",
       { $inc: { seq: 1 } },
-      { upsert: true, new: true }
+      { upsert: true, returnDocument: "after" }
     );
     this.certificateId = `CERT-${year}-${String(counter.seq).padStart(3, "0")}`;
   }
-  next();
 });
 
 module.exports = mongoose.model("Certificate", certificateSchema);

@@ -1,6 +1,7 @@
 const express = require("express");
 const Certificate = require("../models/Certificate");
 const auth = require("../middleware/auth");
+const validateId = require("../middleware/validateId");
 const router = express.Router();
 
 // Public: lookup by registration ID
@@ -36,7 +37,7 @@ router.post("/", auth, async (req, res) => {
 });
 
 // Admin: update certificate
-router.put("/:id", auth, async (req, res) => {
+router.put("/:id", auth, validateId, async (req, res) => {
   try {
     const certificate = await Certificate.findByIdAndUpdate(req.params.id, req.body, {
       new: true,
@@ -49,7 +50,7 @@ router.put("/:id", auth, async (req, res) => {
 });
 
 // Admin: delete certificate
-router.delete("/:id", auth, async (req, res) => {
+router.delete("/:id", auth, validateId, async (req, res) => {
   try {
     await Certificate.findByIdAndDelete(req.params.id);
     res.json({ message: "Certificate deleted" });

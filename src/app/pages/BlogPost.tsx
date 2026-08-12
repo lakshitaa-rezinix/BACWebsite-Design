@@ -1,11 +1,39 @@
 import { motion } from "motion/react";
 import { useParams, Link } from "react-router";
-import { ArrowLeft, Calendar, User } from "lucide-react";
-import { blogPosts } from "../data/blog-posts";
+import { ArrowLeft, Calendar, User, Loader2 } from "lucide-react";
+import { useState, useEffect } from "react";
+import { api } from "../lib/api";
+import type { BlogPost as BlogPostType } from "../data/blog-posts";
 
 export function BlogPost() {
   const { slug } = useParams();
-  const post = blogPosts.find((p) => p.slug === slug);
+  const [post, setPost] = useState<BlogPostType | null>(null);
+  const [related, setRelated] = useState<BlogPostType[]>([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    if (!slug) return;
+    setLoading(true);
+    // Reset so navigating between posts never renders the previous body.
+    setPost(null);
+    Promise.all([
+      api.getBlogPost(slug).catch(() => null),
+      api.getBlogPosts().catch(() => []),
+    ])
+      .then(([found, all]) => {
+        setPost(found);
+        setRelated(all.filter((p: BlogPostType) => p.slug !== slug).slice(0, 2));
+      })
+      .finally(() => setLoading(false));
+  }, [slug]);
+
+  if (loading) {
+    return (
+      <div className="min-h-screen flex items-center justify-center">
+        <Loader2 className="animate-spin text-primary" size={32} />
+      </div>
+    );
+  }
 
   if (!post) {
     return (
@@ -25,9 +53,7 @@ export function BlogPost() {
     );
   }
 
-  const relatedPosts = blogPosts
-    .filter((p) => p.slug !== post.slug)
-    .slice(0, 2);
+  const relatedPosts = related;
 
   return (
     <div className="min-h-screen">

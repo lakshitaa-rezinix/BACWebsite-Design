@@ -3,7 +3,12 @@ node_modules
 dist
 revisions/
 Re_ Preview of the New Website Design/
+.env
+.env.*
+!.env.example
 server/.env
+server/.env.*
+!server/.env.example
 server/node_modules
 server/uploads
 docs/

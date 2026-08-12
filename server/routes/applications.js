@@ -1,12 +1,16 @@
 const express = require("express");
 const multer = require("multer");
 const path = require("path");
+const fs = require("fs");
 const Application = require("../models/Application");
 const auth = require("../middleware/auth");
+const validateId = require("../middleware/validateId");
 const router = express.Router();
 
+const UPLOAD_DIR = path.join(__dirname, "../uploads");
+
 const storage = multer.diskStorage({
-  destination: (req, file, cb) => cb(null, path.join(__dirname, "../uploads")),
+  destination: (req, file, cb) => cb(null, UPLOAD_DIR),
   filename: (req, file, cb) => {
     const unique = Date.now() + "-" + Math.round(Math.random() * 1e9);
     cb(null, unique + path.extname(file.originalname));
@@ -53,7 +57,7 @@ router.get("/", auth, async (req, res) => {
 });
 
 // Admin: update application status
-router.put("/:id", auth, async (req, res) => {
+router.put("/:id", auth, validateId, async (req, res) => {
   try {
     const application = await Application.findByIdAndUpdate(
       req.params.id,
@@ -68,12 +72,22 @@ router.put("/:id", auth, async (req, res) => {
 });
 
 // Admin: download resume
-router.get("/:id/resume", auth, async (req, res) => {
+router.get("/:id/resume", auth, validateId, async (req, res) => {
   try {
     const application = await Application.findById(req.params.id);
     if (!application) return res.status(404).json({ error: "Application not found" });
-    const filePath = path.join(__dirname, "../uploads", application.resumePath);
-    res.download(filePath);
+
+    // resumePath is a server-generated basename, but strip any directory part
+    // anyway so a malformed record can never escape the uploads directory.
+    const stored = path.basename(application.resumePath || "");
+    const filePath = path.join(UPLOAD_DIR, stored);
+    if (!stored || !fs.existsSync(filePath)) {
+      return res.status(404).json({ error: "Resume file is no longer available" });
+    }
+
+    // Without this the browser saves the random storage name (e.g. 17123-948.pdf).
+    const safeName = (application.name || "candidate").replace(/[^a-zA-Z0-9 _-]/g, "").trim();
+    res.download(filePath, `${safeName || "candidate"} - Resume.pdf`);
   } catch (err) {
     res.status(500).json({ error: "Server error" });
   }

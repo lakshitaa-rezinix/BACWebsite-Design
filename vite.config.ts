@@ -19,7 +19,9 @@ export default defineConfig({
 
   server: {
     proxy: {
-      "/api": "http://localhost:5000",
+      // Port 5055, not 5000: macOS Control Center (AirPlay Receiver) squats on
+      // 5000 and answers with an empty 403, which looks like a broken API.
+      "/api": "http://localhost:5055",
     },
   },
 

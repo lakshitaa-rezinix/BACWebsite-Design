@@ -6,9 +6,11 @@ import {
   Award,
   TrendingUp,
   Loader2,
+  Newspaper,
 } from "lucide-react";
 import { useState, useEffect } from "react";
 import { api } from "../../lib/api";
+import { toast } from "sonner";
 
 interface StatCard {
   label: string;
@@ -31,18 +33,30 @@ export function Dashboard() {
   useEffect(() => {
     async function fetchData() {
       try {
-        const [jobs, applications, registrations, certificates] = await Promise.all([
+        const [jobs, applications, registrations, certificates, posts] = await Promise.all([
           api.getAllJobs(),
           api.getApplications(),
           api.getRegistrations(),
           api.getCertificates(),
+          api.getAllBlogPosts(),
         ]);
 
         setStats([
-          { label: "Active Jobs", value: jobs.length, icon: Briefcase },
+          // getAllJobs() includes inactive listings, so filter rather than
+          // reporting the raw length under an "Active" label.
+          {
+            label: "Active Jobs",
+            value: jobs.filter((j: any) => j.isActive).length,
+            icon: Briefcase,
+          },
           { label: "Job Applications", value: applications.length, icon: FileText },
           { label: "PT Registrations", value: registrations.length, icon: ClipboardList },
           { label: "Certificates Issued", value: certificates.length, icon: Award },
+          {
+            label: "Published Posts",
+            value: posts.filter((p: any) => p.isPublished).length,
+            icon: Newspaper,
+          },
         ]);
 
         // Build recent activity from latest 5 applications + registrations combined
@@ -64,8 +78,9 @@ export function Dashboard() {
           .slice(0, 5);
 
         setActivity(combined);
-      } catch {
-        // Silently handle — stats will show 0s
+      } catch (err: any) {
+        // A silent catch here made a failing dashboard look like an empty one.
+        toast.error(err.message || "Failed to load dashboard data");
       } finally {
         setLoading(false);
       }
@@ -102,7 +117,7 @@ export function Dashboard() {
       </div>
 
       {/* Stats */}
-      <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+      <div className="grid md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-6 mb-8">
         {stats.map((stat, index) => (
           <motion.div
             key={stat.label}

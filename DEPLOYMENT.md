@@ -1,5 +1,103 @@
 # EC2 Deployment Guide
 
+## Architecture
+
+Three pieces must all be running:
+
+```
+  Internet -> nginx (:80/:443)
+                |-- /api/*    -> bac-api      (Express, :5055)  reads server/.env
+                |-- /uploads/ -> bac-api      (resume files)
+                `-- /*        -> bac-website  (static build, :3000)
+```
+
+**nginx is not optional.** The frontend calls the API at the relative path `/api`.
+`serve -s dist` answers every unknown path with `index.html`, so without the
+reverse proxy each `/api` call returns the SPA's HTML and the admin panel,
+careers form, PT registration, and certificate lookup all silently fail.
+
+## First-time setup
+
+1. **Environment file** (not in git — create it on the box):
+   ```bash
+   cd ~/BACWebsite-Design/server
+   cp .env.example .env
+   nano .env          # fill in MONGODB_URI, JWT_SECRET, CORS_ORIGIN
+   chmod 600 .env
+   ```
+
+2. **Install dependencies and build:**
+   ```bash
+   cd ~/BACWebsite-Design
+   npm install && npm run build
+   cd server && npm install && cd ..
+   ```
+
+3. **Create the admin user** (once — the app uses a single admin account):
+   ```bash
+   cd server
+   ADMIN_PASSWORD='<a-strong-password>' node seed.js
+   ```
+
+4. **Migrate the original blog posts into MongoDB** (once, optional):
+   ```bash
+   cd server && node seed-blog.js
+   ```
+
+5. **nginx:**
+   ```bash
+   sudo cp nginx.conf.example /etc/nginx/conf.d/bac.conf
+   sudo nano /etc/nginx/conf.d/bac.conf     # set server_name to your domain
+   sudo nginx -t && sudo systemctl reload nginx
+   ```
+
+6. **PM2 (runs both the API and the site):**
+   ```bash
+   sudo npm install -g pm2
+   pm2 start ecosystem.config.js
+   pm2 save
+   pm2 startup            # then run the command it prints, so it survives reboot
+   ```
+
+7. **HTTPS:**
+   ```bash
+   sudo dnf install -y certbot python3-certbot-nginx
+   sudo certbot --nginx -d bombayassay.com -d www.bombayassay.com
+   ```
+
+8. **Security group:** allow inbound 80 and 443 only. Ports 3000 and 5055 must
+   NOT be publicly reachable — nginx reaches them over localhost.
+
+## Redeploying
+
+```bash
+cd ~/BACWebsite-Design
+git pull origin main
+npm install && npm run build
+cd server && npm install && cd ..
+pm2 restart ecosystem.config.js
+```
+
+## Health check
+
+```bash
+curl localhost:5055/api/health
+# {"status":"ok","db":"connected","uptime":123}
+```
+
+If `db` is `disconnected`, check `pm2 logs bac-api`.
+
+## Local development note
+
+The API listens on **5055**, not 5000, because macOS Control Center (AirPlay
+Receiver) occupies port 5000 and answers with an empty `403` — which looks
+exactly like a broken API. Run `npm run dev` (frontend) and
+`cd server && node index.js` (API) side by side; Vite proxies `/api` to 5055.
+
+---
+
+## Legacy notes
+
 ## Current Setup
 You're deploying by SSH-ing into EC2 and running `git pull` + `npm run build`.
 

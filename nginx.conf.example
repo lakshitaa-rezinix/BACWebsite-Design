@@ -1,0 +1,57 @@
+# Nginx reverse proxy for the BAC website.
+#
+# WHY THIS IS REQUIRED: the frontend calls the API at the relative path /api.
+# In development Vite proxies that to localhost:5055. In production `serve -s dist`
+# does not — it answers every unknown path with index.html, so without this file
+# each /api call returns the SPA's HTML and the admin panel, careers form, PT
+# registration, and certificate lookup all fail.
+#
+# Install:
+#   sudo cp nginx.conf.example /etc/nginx/conf.d/bac.conf
+#   sudo nginx -t && sudo systemctl reload nginx
+#
+# Then add HTTPS:
+#   sudo dnf install -y certbot python3-certbot-nginx
+#   sudo certbot --nginx -d bombayassay.com -d www.bombayassay.com
+
+server {
+    listen 80;
+    server_name bombayassay.com www.bombayassay.com;  # <-- change to your domain
+
+    # Resume uploads are capped at 5MB by multer; allow a little headroom so the
+    # app returns its own clear error rather than nginx's generic 413 page.
+    client_max_body_size 8M;
+
+    gzip on;
+    gzip_types text/plain text/css application/javascript application/json image/svg+xml;
+    gzip_min_length 1024;
+
+    # API -> Express
+    location /api/ {
+        proxy_pass http://127.0.0.1:5055;
+        proxy_http_version 1.1;
+        proxy_set_header Host              $host;
+        proxy_set_header X-Real-IP         $remote_addr;
+        # index.js sets `trust proxy`, so this header determines the client IP
+        # the login rate limiter keys on. Without it every request looks local.
+        proxy_set_header X-Forwarded-For   $proxy_add_x_forwarded_for;
+        proxy_set_header X-Forwarded-Proto $scheme;
+        proxy_read_timeout 60s;
+    }
+
+    # Uploaded resumes are served by Express (behind admin auth for downloads).
+    location /uploads/ {
+        proxy_pass http://127.0.0.1:5055;
+        proxy_set_header Host $host;
+    }
+
+    # Everything else -> the static SPA build
+    location / {
+        proxy_pass http://127.0.0.1:3000;
+        proxy_http_version 1.1;
+        proxy_set_header Host              $host;
+        proxy_set_header X-Real-IP         $remote_addr;
+        proxy_set_header X-Forwarded-For   $proxy_add_x_forwarded_for;
+        proxy_set_header X-Forwarded-Proto $scheme;
+    }
+}
