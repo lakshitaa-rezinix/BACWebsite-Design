@@ -1,5 +1,5 @@
 import { motion } from "motion/react";
-import { Eye, Download, Loader2, X } from "lucide-react";
+import { Eye, Download, Loader2, X, Trash2 } from "lucide-react";
 import { useState, useEffect } from "react";
 import { api } from "../../lib/api";
 import { toast } from "sonner";
@@ -31,6 +31,7 @@ export function JobApplications() {
   const [applications, setApplications] = useState<Application[]>([]);
   const [loading, setLoading] = useState(true);
   const [viewApp, setViewApp] = useState<Application | null>(null);
+  const [deleteConfirm, setDeleteConfirm] = useState<string | null>(null);
 
   const fetchApplications = async () => {
     try {
@@ -54,6 +55,19 @@ export function JobApplications() {
       fetchApplications();
     } catch {
       toast.error("Failed to update status");
+    }
+  };
+
+  const handleDelete = async (app: Application) => {
+    try {
+      await api.deleteApplication(app._id);
+      toast.success(`Application from ${app.name} deleted`);
+      setDeleteConfirm(null);
+      // Close the detail panel if the deleted record was open in it.
+      setViewApp((cur) => (cur?._id === app._id ? null : cur));
+      fetchApplications();
+    } catch (err: any) {
+      toast.error(err.message || "Failed to delete application");
     }
   };
 
@@ -154,6 +168,31 @@ export function JobApplications() {
                       >
                         <Download size={16} />
                       </button>
+                      {deleteConfirm === app._id ? (
+                        <div className="flex items-center gap-1">
+                          <button
+                            onClick={() => handleDelete(app)}
+                            className="px-2 py-1 text-xs bg-red-500/20 text-red-400 rounded hover:bg-red-500/30 whitespace-nowrap"
+                            title="This also deletes the stored resume"
+                          >
+                            Confirm
+                          </button>
+                          <button
+                            onClick={() => setDeleteConfirm(null)}
+                            className="px-2 py-1 text-xs text-muted-foreground hover:text-foreground"
+                          >
+                            Cancel
+                          </button>
+                        </div>
+                      ) : (
+                        <button
+                          onClick={() => setDeleteConfirm(app._id)}
+                          className="p-2 text-muted-foreground hover:text-red-400 transition-colors"
+                          title="Delete application"
+                        >
+                          <Trash2 size={16} />
+                        </button>
+                      )}
                     </div>
                   </td>
                 </tr>

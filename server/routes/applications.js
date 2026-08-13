@@ -93,4 +93,22 @@ router.get("/:id/resume", auth, validateId, async (req, res) => {
   }
 });
 
+// Admin: delete an application and its resume file.
+router.delete("/:id", auth, validateId, async (req, res) => {
+  try {
+    const application = await Application.findByIdAndDelete(req.params.id);
+    if (!application) return res.status(404).json({ error: "Application not found" });
+
+    // Remove the resume too, otherwise deleted candidates leave orphaned PDFs
+    // on disk forever. The nightly S3 backup does not delete, so a mistaken
+    // removal is still recoverable from the bucket.
+    if (application.resumePath) {
+      fs.rmSync(path.join(UPLOAD_DIR, path.basename(application.resumePath)), { force: true });
+    }
+    res.json({ message: "Application deleted" });
+  } catch (err) {
+    res.status(500).json({ error: "Server error" });
+  }
+});
+
 module.exports = router;

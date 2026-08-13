@@ -165,6 +165,7 @@ export const api = {
   getApplications: () => request("/applications"),
   updateApplicationStatus: (id: string, status: string) =>
     request(`/applications/${id}`, { method: "PUT", body: JSON.stringify({ status }) }),
+  deleteApplication: (id: string) => request(`/applications/${id}`, { method: "DELETE" }),
   downloadResume,
 
   // Registrations
@@ -173,6 +174,7 @@ export const api = {
   getRegistrations: () => request("/registrations"),
   updateRegistrationStatus: (id: string, status: string) =>
     request(`/registrations/${id}`, { method: "PUT", body: JSON.stringify({ status }) }),
+  deleteRegistration: (id: string) => request(`/registrations/${id}`, { method: "DELETE" }),
 
   // Certificates
   lookupCertificates: (registrationId: string) =>

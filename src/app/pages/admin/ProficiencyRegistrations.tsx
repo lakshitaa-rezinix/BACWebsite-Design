@@ -1,5 +1,5 @@
 import { motion } from "motion/react";
-import { Eye, CheckCircle, Clock, XCircle, Loader2, X } from "lucide-react";
+import { Eye, CheckCircle, Clock, XCircle, Loader2, X, Trash2 } from "lucide-react";
 import { useState, useEffect } from "react";
 import { api } from "../../lib/api";
 import { toast } from "sonner";
@@ -25,6 +25,7 @@ interface Registration {
   agreeProtocol?: boolean;
   agreeDataUse?: boolean;
   applicationDate?: string;
+  certificateCount?: number;
   preferredDate?: string;
   notes?: string;
   status: string;
@@ -50,6 +51,34 @@ export function ProficiencyRegistrations() {
   useEffect(() => {
     fetchRegistrations();
   }, []);
+
+  const handleDelete = async (reg: Registration) => {
+    const certs = reg.certificateCount ?? 0;
+    // Certificates are verified against their registration, so deleting one
+    // without the other would strand them. Say so plainly before doing it.
+    const warning = certs
+      ? `\n\nThis will ALSO permanently delete ${certs} issued certificate${certs > 1 ? "s" : ""} and their PDFs.`
+      : "";
+    if (
+      !window.confirm(
+        `Delete registration ${reg.registrationId} (${reg.organizationName})?${warning}\n\nThis cannot be undone.`
+      )
+    )
+      return;
+
+    try {
+      const result = await api.deleteRegistration(reg._id);
+      toast.success(
+        result?.certificatesDeleted
+          ? `Registration deleted, along with ${result.certificatesDeleted} certificate(s)`
+          : "Registration deleted"
+      );
+      setViewReg((cur) => (cur?._id === reg._id ? null : cur));
+      fetchRegistrations();
+    } catch (err: any) {
+      toast.error(err.message || "Failed to delete registration");
+    }
+  };
 
   const handleStatusChange = async (id: string, status: string) => {
     try {
@@ -201,6 +230,17 @@ export function ProficiencyRegistrations() {
                           </button>
                         </>
                       )}
+                      <button
+                        onClick={() => handleDelete(reg)}
+                        className="p-2 text-muted-foreground hover:text-red-400 transition-colors"
+                        title={
+                          reg.certificateCount
+                            ? `Delete registration (also deletes ${reg.certificateCount} certificate(s))`
+                            : "Delete registration"
+                        }
+                      >
+                        <Trash2 size={16} />
+                      </button>
                     </div>
                   </td>
                 </tr>
