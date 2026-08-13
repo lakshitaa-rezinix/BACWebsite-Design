@@ -15,6 +15,8 @@ interface Certificate {
   issueDate: string;
   validUntil: string;
   status: string;
+  hasFile?: boolean;
+  originalName?: string;
   createdAt: string;
 }
 
@@ -35,6 +37,8 @@ export function CertificateManager() {
   const [form, setForm] = useState(emptyForm);
   const [submitting, setSubmitting] = useState(false);
   const [deleteConfirm, setDeleteConfirm] = useState<string | null>(null);
+  const [file, setFile] = useState<File | null>(null);
+  const [existingFile, setExistingFile] = useState<{ name?: string; has: boolean }>({ has: false });
 
   const fetchCertificates = async () => {
     try {
@@ -57,6 +61,8 @@ export function CertificateManager() {
 
   const openIssueForm = () => {
     setForm(emptyForm);
+    setFile(null);
+    setExistingFile({ has: false });
     setEditingId(null);
     setShowForm(true);
   };
@@ -70,6 +76,8 @@ export function CertificateManager() {
       validUntil: cert.validUntil.split("T")[0],
       status: cert.status,
     });
+    setFile(null);
+    setExistingFile({ has: !!cert.hasFile, name: cert.originalName });
     setEditingId(cert._id);
     setShowForm(true);
   };
@@ -78,11 +86,19 @@ export function CertificateManager() {
     e.preventDefault();
     setSubmitting(true);
     try {
+      // Send multipart only when a PDF is attached; otherwise plain JSON.
+      let payload: any = form;
+      if (file) {
+        const fd = new FormData();
+        Object.entries(form).forEach(([k, v]) => fd.append(k, String(v)));
+        fd.append("file", file);
+        payload = fd;
+      }
       if (editingId) {
-        await api.updateCertificate(editingId, form);
+        await api.updateCertificate(editingId, payload);
         toast.success("Certificate updated");
       } else {
-        await api.issueCertificate(form);
+        await api.issueCertificate(payload);
         toast.success("Certificate issued");
       }
       setShowForm(false);
@@ -341,6 +357,37 @@ export function CertificateManager() {
                   </select>
                 </div>
               )}
+
+              <div>
+                <label className="block text-sm font-medium text-foreground mb-1">
+                  Certificate PDF{" "}
+                  <span className="text-muted-foreground font-normal">
+                    (optional — max 10MB)
+                  </span>
+                </label>
+                <input
+                  type="file"
+                  accept="application/pdf"
+                  onChange={(e) => setFile(e.target.files?.[0] ?? null)}
+                  className="w-full text-sm text-foreground file:mr-3 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-sm file:font-semibold file:bg-primary/10 file:text-primary hover:file:bg-primary/20 cursor-pointer"
+                />
+                {existingFile.has && !file && (
+                  <p className="text-xs text-muted-foreground mt-1.5">
+                    A PDF is already attached
+                    {existingFile.name ? ` (${existingFile.name})` : ""}. Choosing a
+                    new file replaces it.
+                  </p>
+                )}
+                {file && (
+                  <p className="text-xs text-primary mt-1.5">
+                    Selected: {file.name} ({Math.round(file.size / 1024)} KB)
+                  </p>
+                )}
+                <p className="text-xs text-muted-foreground mt-1.5">
+                  Labs download this from the PT Portal using their registration ID
+                  plus the email they registered with.
+                </p>
+              </div>
 
               <Button
                 type="submit"

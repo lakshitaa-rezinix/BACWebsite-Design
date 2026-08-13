@@ -12,3 +12,7 @@ server/.env.*
 server/node_modules
 server/uploads
 docs/
+
+# Real people's certificate PDFs — must never be served from the web root
+private-files/
+server/.s3-backup-manifest.json

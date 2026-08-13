@@ -21,7 +21,9 @@ export function Root() {
   const navLinks = [
     { path: "/", label: "Home" },
     { path: "/about", label: "About" },
-    { path: "/services", label: "Our Services" },
+    { path: "/services", label: "Services" },
+    { path: "/gallery", label: "Gallery" },
+    { path: "/blog", label: "Blog" },
     { path: "/proficiency-portal", label: "PT Portal" },
     { path: "/careers", label: "Careers" },
     { path: "/contact", label: "Contact" },
@@ -63,7 +65,7 @@ export function Root() {
             </Link>
 
             {/* Desktop Navigation */}
-            <div className="hidden lg:flex items-center gap-6">
+            <div className="hidden lg:flex items-center gap-4 xl:gap-6">
               {navLinks.map((link) => (
                 <Link
                   key={link.path}
@@ -183,6 +185,9 @@ export function Root() {
                 {[
                   { to: "/about", label: "About Us" },
                   { to: "/services", label: "Services" },
+                  { to: "/hallmarking-journey", label: "Hallmarking Journey" },
+                  { to: "/gallery", label: "Gallery" },
+                  { to: "/blog", label: "Blog & News" },
                   { to: "/careers", label: "Careers" },
                   { to: "/contact", label: "Contact" },
                 ].map((link) => (

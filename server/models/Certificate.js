@@ -1,10 +1,6 @@
 const mongoose = require("mongoose");
 
-const counterSchema = new mongoose.Schema({
-  _id: String,
-  seq: { type: Number, default: 0 },
-});
-const Counter = mongoose.models.Counter || mongoose.model("Counter", counterSchema);
+const { nextSequentialId } = require("../lib/sequence");
 
 const certificateSchema = new mongoose.Schema({
   certificateId: { type: String, unique: true },
@@ -18,6 +14,13 @@ const certificateSchema = new mongoose.Schema({
     enum: ["Active", "Expired"],
     default: "Active",
   },
+
+  // Uploaded PDF. Stored on the server's disk under uploads/certificates/ and
+  // served ONLY through the authorised download route — never as a static file.
+  filePath: { type: String },
+  originalName: { type: String },
+  fileSize: { type: Number },
+
   createdAt: { type: Date, default: Date.now },
 });
 
@@ -26,13 +29,7 @@ const certificateSchema = new mongoose.Schema({
 // every save, which made Certificate.create() fail outright.
 certificateSchema.pre("save", async function () {
   if (!this.certificateId) {
-    const year = new Date().getFullYear();
-    const counter = await Counter.findByIdAndUpdate(
-      "certificateId",
-      { $inc: { seq: 1 } },
-      { upsert: true, returnDocument: "after" }
-    );
-    this.certificateId = `CERT-${year}-${String(counter.seq).padStart(3, "0")}`;
+    this.certificateId = await nextSequentialId(this.constructor, "certificateId", "CERT");
   }
 });
 

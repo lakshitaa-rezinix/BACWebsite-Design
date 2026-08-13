@@ -116,6 +116,36 @@ async function downloadResume(id: string, candidateName?: string) {
   URL.revokeObjectURL(url);
 }
 
+/**
+ * Download a certificate PDF as a blob.
+ *
+ * Labs must supply the email address from their registration; admins are
+ * authorised by their bearer token instead and can omit it. Either way the file
+ * is streamed from an authorised endpoint, never a public static path.
+ */
+async function downloadCertificate(id: string, email?: string, filename?: string) {
+  const res = await fetch(`${API_BASE}/certificates/${id}/download`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json", ...authHeaders() },
+    body: JSON.stringify({ email: email || "" }),
+  });
+
+  if (!res.ok) {
+    const data = await res.json().catch(() => ({}));
+    throw new Error(data.error || "Could not download certificate");
+  }
+
+  const blob = await res.blob();
+  const url = URL.createObjectURL(blob);
+  const link = document.createElement("a");
+  link.href = url;
+  link.download = `${filename || "certificate"}.pdf`;
+  document.body.appendChild(link);
+  link.click();
+  link.remove();
+  URL.revokeObjectURL(url);
+}
+
 export const api = {
   // Auth
   login: (email: string, password: string) =>
@@ -148,11 +178,19 @@ export const api = {
   lookupCertificates: (registrationId: string) =>
     request(`/certificates/lookup/${encodeURIComponent(registrationId)}`),
   getCertificates: () => request("/certificates"),
+  // Accepts FormData when a PDF is attached, or a plain object when it is not.
   issueCertificate: (data: any) =>
-    request("/certificates", { method: "POST", body: JSON.stringify(data) }),
+    request("/certificates", {
+      method: "POST",
+      body: data instanceof FormData ? data : JSON.stringify(data),
+    }),
   updateCertificate: (id: string, data: any) =>
-    request(`/certificates/${id}`, { method: "PUT", body: JSON.stringify(data) }),
+    request(`/certificates/${id}`, {
+      method: "PUT",
+      body: data instanceof FormData ? data : JSON.stringify(data),
+    }),
   deleteCertificate: (id: string) => request(`/certificates/${id}`, { method: "DELETE" }),
+  downloadCertificate,
 
   // Blog (public)
   getBlogPosts: () => request("/blog"),

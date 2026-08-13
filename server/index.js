@@ -54,7 +54,13 @@ app.use(
 
 app.use(express.json({ limit: "1mb" }));
 app.use(express.urlencoded({ extended: true, limit: "1mb" }));
-app.use("/uploads", express.static(UPLOAD_DIR));
+
+// NOTE: uploads are deliberately NOT served as static files. This used to be
+//   app.use("/uploads", express.static(UPLOAD_DIR))
+// which published every candidate's resume at /uploads/<filename> with no
+// authentication, bypassing the admin-only download route. Nothing in the
+// frontend referenced it. Resumes and certificates are served exclusively
+// through their authorised endpoints, which stream the file after a check.
 
 // Throttle credential stuffing against the single admin account.
 const loginLimiter = rateLimit({

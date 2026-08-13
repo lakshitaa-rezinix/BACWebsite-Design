@@ -1,10 +1,6 @@
 const mongoose = require("mongoose");
 
-const counterSchema = new mongoose.Schema({
-  _id: String,
-  seq: { type: Number, default: 0 },
-});
-const Counter = mongoose.models.Counter || mongoose.model("Counter", counterSchema);
+const { nextSequentialId } = require("../lib/sequence");
 
 const registrationSchema = new mongoose.Schema({
   registrationId: { type: String, unique: true },
@@ -53,13 +49,7 @@ const registrationSchema = new mongoose.Schema({
 // every save, which made Registration.create() fail outright.
 registrationSchema.pre("save", async function () {
   if (!this.registrationId) {
-    const year = new Date().getFullYear();
-    const counter = await Counter.findByIdAndUpdate(
-      "registrationId",
-      { $inc: { seq: 1 } },
-      { upsert: true, returnDocument: "after" }
-    );
-    this.registrationId = `PT-${year}-${String(counter.seq).padStart(3, "0")}`;
+    this.registrationId = await nextSequentialId(this.constructor, "registrationId", "PT");
   }
 });
 

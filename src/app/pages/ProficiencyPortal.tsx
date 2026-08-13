@@ -22,6 +22,7 @@ interface Certificate {
   organizationName: string;
   issueDate: string;
   validUntil: string;
+  hasFile?: boolean;
   status: string;
 }
 
@@ -62,6 +63,8 @@ export function ProficiencyPortal() {
   const [certificates, setCertificates] = useState<Certificate[]>([]);
   const [lookingUp, setLookingUp] = useState(false);
   const [hasSearched, setHasSearched] = useState(false);
+  const [downloadEmail, setDownloadEmail] = useState<Record<string, string>>({});
+  const [downloadingId, setDownloadingId] = useState<string | null>(null);
 
   const handleRegistrationSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -117,6 +120,23 @@ export function ProficiencyPortal() {
       toast.error(err.message || "Failed to submit registration");
     } finally {
       setSubmittingReg(false);
+    }
+  };
+
+  const handleCertificateDownload = async (cert: Certificate) => {
+    const email = (downloadEmail[cert._id] ?? "").trim();
+    if (!email) {
+      toast.error("Please enter the email address on your registration");
+      return;
+    }
+    setDownloadingId(cert._id);
+    try {
+      await api.downloadCertificate(cert._id, email, cert.certificateId);
+      toast.success("Certificate downloaded");
+    } catch (err: any) {
+      toast.error(err.message || "Could not download certificate");
+    } finally {
+      setDownloadingId(null);
     }
   };
 
@@ -667,6 +687,49 @@ export function ProficiencyPortal() {
                           Issued: {new Date(cert.issueDate).toLocaleDateString()} &bull;
                           Valid Until: {new Date(cert.validUntil).toLocaleDateString()}
                         </p>
+
+                        {cert.hasFile ? (
+                          <div className="mt-4 pt-4 border-t border-primary/15">
+                            <label className="block text-sm text-foreground mb-2">
+                              Enter the email address on your registration to download
+                              the certificate PDF
+                            </label>
+                            <div className="flex flex-col sm:flex-row gap-2">
+                              <Input
+                                type="email"
+                                value={downloadEmail[cert._id] ?? ""}
+                                onChange={(e) =>
+                                  setDownloadEmail((prev) => ({
+                                    ...prev,
+                                    [cert._id]: e.target.value,
+                                  }))
+                                }
+                                placeholder="you@laboratory.com"
+                                className="bg-background/50 border-primary/20 text-foreground"
+                              />
+                              <Button
+                                type="button"
+                                onClick={() => handleCertificateDownload(cert)}
+                                disabled={downloadingId === cert._id}
+                                className="bg-primary hover:bg-primary/80 text-primary-foreground font-semibold whitespace-nowrap"
+                              >
+                                {downloadingId === cert._id ? (
+                                  <span className="flex items-center gap-2">
+                                    <Loader2 className="animate-spin" size={16} />
+                                    Preparing...
+                                  </span>
+                                ) : (
+                                  "Download PDF"
+                                )}
+                              </Button>
+                            </div>
+                          </div>
+                        ) : (
+                          <p className="mt-4 pt-4 border-t border-primary/15 text-muted-foreground text-sm">
+                            The signed PDF for this certificate has not been uploaded
+                            yet. Please contact BAC if you need it urgently.
+                          </p>
+                        )}
                       </motion.div>
                     ))
                   )}

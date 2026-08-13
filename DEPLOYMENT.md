@@ -78,6 +78,78 @@ cd server && npm install && cd ..
 pm2 restart ecosystem.config.js
 ```
 
+
+## File storage & backup
+
+Uploaded files live on the **EC2 instance's local disk**, and are served only
+through authorised endpoints — never as static files:
+
+```
+server/uploads/
+  <timestamp>-<random>.pdf              candidate resumes
+  certificates/<timestamp>-<random>.pdf PT certificates
+```
+
+MongoDB stores the metadata plus the stored filename; the file bytes are on disk.
+Random filenames mean the path cannot be guessed, and there is no static route
+to them regardless.
+
+### Nightly S3 backup
+
+Local disk does not survive instance termination or root-volume loss, so
+`server/backup-to-s3.js` copies uploads to S3.
+
+```bash
+cd ~/BACWebsite-Design/server
+node backup-to-s3.js            # incremental (new/changed only)
+node backup-to-s3.js --all      # force re-upload everything
+node backup-to-s3.js --restore  # pull files missing locally (needs s3:ListBucket)
+```
+
+Schedule it:
+
+```bash
+crontab -e
+15 2 * * *  cd /home/ec2-user/BACWebsite-Design/server && /usr/bin/node backup-to-s3.js >> /home/ec2-user/logs/backup.log 2>&1
+```
+
+Backups never delete: a file removed on the instance stays in S3, so an
+accidental wipe cannot cascade into the backup.
+
+### Required IAM permissions
+
+The `bac-certificates-dev` user currently has object-level access only, which is
+enough to back up but **not enough to list or restore**. Attach this policy so
+restores work:
+
+```json
+{
+  "Version": "2012-10-17",
+  "Statement": [
+    {
+      "Effect": "Allow",
+      "Action": ["s3:PutObject", "s3:GetObject"],
+      "Resource": "arn:aws:s3:::bac-website-certificates/*"
+    },
+    {
+      "Effect": "Allow",
+      "Action": ["s3:ListBucket"],
+      "Resource": "arn:aws:s3:::bac-website-certificates"
+    }
+  ]
+}
+```
+
+Note the two different resource ARNs — `s3:ListBucket` applies to the **bucket**,
+object actions apply to `bucket/*`. Granting only the second is the usual cause
+of "AccessDenied on ListBucket".
+
+Prefer an **IAM instance role** on the EC2 box over static keys; with a role
+attached, drop `AWS_ACCESS_KEY_ID`/`AWS_SECRET_ACCESS_KEY` from `server/.env`
+entirely and the SDK picks the role up automatically.
+
+---
+
 ## Health check
 
 ```bash
